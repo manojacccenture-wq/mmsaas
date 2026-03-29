@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme {
+  --font-outfit: "Outfit", system-ui, sans-serif;
+}
+
+/* Tokens */
+@import "./styles/tokens/index.css";
+
+/* Fonts */
+@import "./styles/font/index.css";
+
+/* Theme */
+@import "./styles/theme/theme.css";
+
+/* Base */
+@import "./styles/base/index.css";
+
+/* Components */
+@import "./styles/components/index.css";

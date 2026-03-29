@@ -1,0 +1,32 @@
+/* =========================================
+   Select Component Colors
+========================================= */
+@theme {
+/* Base */
+--color-select-bg: #FFFFFF;
+--color-select-text: #161A25;
+--color-select-border: #CBCED6;
+--color-select-placeholder: #8C93A4;
+
+/* Hover */
+--color-select-hover-border: #00BFA6;
+
+/* Focus */
+--color-select-focus-border: #00BFA6;
+--color-select-focus-ring: rgba(0, 191, 166, 0.20);
+
+/* Success */
+--color-select-success-border: #2ECC71;
+
+/* Error */
+--color-select-error-border: #EF2525;
+--color-select-error-text: #EF2525;
+
+/* Disabled */
+--color-select-disabled-bg: #F3F5F9;
+--color-select-disabled-border: #E4E7ED;
+--color-select-disabled-text: #8C93A4;
+
+/* Arrow */
+--color-select-arrow: #767E8F;
+}

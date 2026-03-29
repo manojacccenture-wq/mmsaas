@@ -1,0 +1,10 @@
+:root {
+  --color-primary-light: 0, 191, 166; /* RGB of #00BFA6 */
+  --color-secondary-light: 97, 0, 255;
+  --color-success-light: 46, 204, 113;
+  --color-info-light: 0, 148, 255;
+  --color-warning-light: 255, 236, 200;
+  --color-danger-light: 239, 37, 37;
+  
+}
+

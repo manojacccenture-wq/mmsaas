@@ -1,0 +1,53 @@
+@theme {
+
+    /* Neutral */
+    --color-neutral-100: #161A25;
+    --color-neutral-90: #2C3241;
+    --color-neutral-80: #3F4656;
+    --color-neutral-70: #636A7B;
+    --color-neutral-60: #767E8F;
+    --color-neutral-50: #8C93A4;
+    --color-neutral-40: #A9AFBD;
+    --color-neutral-30: #CBCED6;
+    --color-neutral-20: #E4E7ED;
+    --color-neutral-10: #F3F5F9;
+
+    /* Default */
+    --color-gaBlack: #000;
+    --color-gaWhite: #FFF;
+
+
+    /* Button Primary */
+    --color-primary-dark: #00BFA6;
+    --color-primary: #00BFA6;
+    --color-primary-light: #00BFA6;
+
+    /* Button Secondary */
+    --color-secondary-dark: #4700BB;
+    --color-secondary: #6100FF;
+    --color-secondary-light: #6100FF;
+
+    /* Button Success */
+    --color-success-dark: #2ECC71;
+    --color-success: #2ECC71;
+    --color-success-light: #2ECC71;
+
+    /* Button Info */
+    --color-info-dark: #0071C2;
+    --color-info: #0094FF;
+    --color-info-light: #0094FF;
+
+    /* Button Warning */
+    --color-warning-dark: #E58A00;
+    --color-warning: #FFA800;
+    --color-warning-light: #FFECC8;
+
+    /* Button Danger */
+    --color-danger-dark: #C00606;
+    --color-danger: #EF2525;
+    --color-danger-light: #EF2525;
+
+
+}
+
+
