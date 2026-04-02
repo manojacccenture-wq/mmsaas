@@ -25,7 +25,7 @@ const PasswordReset: React.FC = () => {
   const passwordValue = watch("password");
 
   const onSubmit: SubmitHandler<PasswordResetFormData> = (data) => {
-    console.log("Reset Data:", data);
+    console.log('data: ', data)
   };
 
   return (

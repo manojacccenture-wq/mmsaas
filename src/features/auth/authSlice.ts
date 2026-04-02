@@ -15,6 +15,7 @@ interface AuthState {
   status: 'idle' | 'loading' | 'succeeded' | 'failed' | 'pending';
   error: string | null;
   otpType: "email" | "totp" | null; // NEW FIELD TO TRACK OTP TYPE
+  loading: Boolean;
 }
 
 const initialState: AuthState = {
@@ -26,7 +27,9 @@ const initialState: AuthState = {
   status: 'idle', // idle | loading | succeeded | failed
   error: null,
   firstTimeLogin: false,
-  otpType:null
+  otpType: null,
+  loading: true, // 🔥 IMPORTANT
+
 };
 
 
@@ -120,12 +123,13 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(verifyMfaAsync.fulfilled, (state, action: any) => {
+
         state.status = "succeeded";
         state.user = action.payload; // 
         state.mfaPending = false;
         state.isAuthenticated = true;
         state.tempCredentials = null; // VERY IMPORTANT
-        state.firstTimeLogin = action.payload?.IsFirstTimeLogin === true;
+        state.firstTimeLogin = action.payload?.isFirstTimeLogin === true;
       })
       .addCase(verifyMfaAsync.rejected, (state, action: any) => {
         state.status = 'failed';
@@ -192,26 +196,20 @@ const authSlice = createSlice({
 
     builder
       .addCase(restoreSessionAsync.pending, (state) => {
-        state.status = "loading";
+        state.loading = true;
       })
-      .addCase(restoreSessionAsync.fulfilled, (state, action: any) => {
-        state.status = "succeeded";
-
-        const role = action.payload?.Role?.toLowerCase();
-
-        if (role === "operator") {
-          state.isAuthenticated = false;
-          state.user = null;
-          return;
-        }
-
+      .addCase(restoreSessionAsync.fulfilled, (state, action) => {
+        state.loading = false;
         state.isAuthenticated = true;
-        state.user = action.payload;
+        state.user = action.payload.user;
       })
       .addCase(restoreSessionAsync.rejected, (state) => {
-        state.status = "idle";
+        state.loading = false;
         state.isAuthenticated = false;
+        state.user = null;
       });
+
+
   },
 });
 

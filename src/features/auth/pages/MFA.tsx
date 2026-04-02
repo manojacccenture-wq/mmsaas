@@ -12,6 +12,7 @@ import Button from "@/shared/components/UI/Button/Button";
 import { clearError } from "@/features/auth/authSlice";
 import { verifyMfaAsync } from "@/features/auth/authThunk";
 import { useAppDispatch, useAppSelector } from "@/app/store/hook";
+import Modal from "@/shared/components/Modal/Modal";
 
 // import { maskEmail } from "@/shared/lib/helpers";
 
@@ -22,39 +23,40 @@ const MFA: React.FC = () => {
   const dispatch = useAppDispatch();
 
   // Get auth state from Redux
-  const { status, error, mfaPending, user, otpType } = useAppSelector((state) => state.auth);
+  const { status, error,  otpType } = useAppSelector((state) => state.auth);
+
 
 
   const [timer, setTimer] = useState<number>(60);
 
-const {
-  register,
-  handleSubmit,
-  formState: { errors },
-  watch,
-  setValue,
-} = useForm<MfaSchemaType>({
-  resolver: zodResolver(mfaSchema),
-  mode: "onTouched",
-  defaultValues: {
-    otp: "",
-  },
-});
+  const [showSetupModal, setShowSetupModal] = useState(false);
 
-const otpValue = watch("otp");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<MfaSchemaType>({
+    resolver: zodResolver(mfaSchema),
+    mode: "onTouched",
+    defaultValues: {
+      otp: "",
+    },
+  });
+
+
 
   const isLoading = status === "loading";
 
   // Handle successful MFA verification
-  useEffect(() => {
-    if (!mfaPending && status === "succeeded") {
-      if (user?.IsFirstTimeLogin) {
-        navigate("/reset_Flow");
-      } else {
-        navigate("/dashboard");
-      }
-    }
-  }, [mfaPending, status, navigate, user?.IsFirstTimeLogin]);
+  // useEffect(() => {
+  //   if (!mfaPending && isAuthenticated) {
+  //     if (!mfaPending && isAuthenticated && firstTimeLogin) {
+  //       setShowSetupModal(true);
+  //     } else {
+  //       navigate("/dashboard");
+  //     }
+  //   }
+  // }, [mfaPending, status, navigate, firstTimeLogin]);
 
   const startTimer = (): void => {
     let count = 60;
@@ -78,21 +80,44 @@ const otpValue = watch("otp");
       setTimer(0);
     };
   }, []);
+  // const onSubmit: SubmitHandler<MfaSchemaType> = async (data) => {
+  //   dispatch(clearError());
+
+
+
+  //   try {
+  //     await dispatch(
+  //       verifyMfaAsync({
+  //         token: data.otp,
+  //       })
+  //     ).unwrap();
+  //   } catch (err) {
+  //     // Error handled by Redux slice
+  //   }
+  // };
+
   const onSubmit: SubmitHandler<MfaSchemaType> = async (data) => {
-    dispatch(clearError());
+  dispatch(clearError());
 
+  try {
+    const result = await dispatch(
+      verifyMfaAsync({
+        token: data.otp,
+      })
+    ).unwrap();
 
+    // 🎯 CONTROL FLOW HERE (no useEffect needed)
 
-    try {
-      await dispatch(
-        verifyMfaAsync({
-          token: data.otp,
-        })
-      ).unwrap();
-    } catch (err) {
-      // Error handled by Redux slice
+    if (result.isFirstTimeLogin) {
+      setShowSetupModal(true);
+    } else {
+      navigate("/dashboard");
     }
-  };
+
+  } catch (err) {
+    // handled already
+  }
+};
 
   const otpMessage =
     otpType === "email"
@@ -129,6 +154,50 @@ const otpValue = watch("otp");
             {error}
           </div>
         )}
+
+        <Modal
+          isOpen={showSetupModal}
+          onClose={() => setShowSetupModal(false)}
+          header={
+            <h3 className="text-lg font-semibold">
+              Enhance Your Security
+            </h3>
+          }
+        >
+          <div className="flex flex-col gap-4">
+            <p className="text-sm text-gray-600">
+              For better security, we recommend enabling an authenticator app (TOTP).
+            </p>
+
+            <ul className="text-sm text-gray-500 list-disc pl-5">
+              <li>Protect your account from unauthorized access</li>
+              <li>Use apps like Google Authenticator</li>
+              <li>Quick & secure login experience</li>
+            </ul>
+
+            <div className="flex gap-3 mt-4">
+              <Button
+                variant="primary"
+                onClick={() => {
+                  setShowSetupModal(false);
+                  navigate("/setup-totp"); // 👉 your setup flow page
+                }}
+              >
+                Enable Now
+              </Button>
+
+              <Button
+                variant="outlinePrimary"
+                onClick={() => {
+                  setShowSetupModal(false);
+                  navigate("/dashboard");
+                }}
+              >
+                Skip for Now
+              </Button>
+            </div>
+          </div>
+        </Modal>
 
         <form
           onSubmit={handleSubmit(onSubmit)}

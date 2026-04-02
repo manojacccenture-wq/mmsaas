@@ -7,12 +7,15 @@ import type { LoginRequest } from "@/features/auth/api/auth.types";
 
 const API_ENDPOINTS = {
   LOGIN: "v1/api/auth/login",
-  ME: "me",
+  ME: "v1/api/auth/me",
   REGISTER: "register",
   VERIFY_MFA: "v1/api/auth/verify-login-mfa",
+  ENABLE_MFA: "v1/api/auth/enable-mfa",
+  VERIFY_MFA_SETUP: "v1/api/auth/verify-mfa-setup",
   LOGOUT: "/api/Account/Logout",
   FORGOT_PASSWORD: "/api/Account/ForgotPassword",
   RESET_PASSWORD: "/api/Account/CustomResetPassword",
+  REFRESH: "v1/api/auth/refresh",
 };
 
 
@@ -34,12 +37,20 @@ const authService = {
     return apiClient.post(API_ENDPOINTS.REGISTER, data);
   },
 
-verifyMfa: (data: { token: string }) => {
-  return apiClient.post(API_ENDPOINTS.VERIFY_MFA, {
-    token: data.token,
-  });
-},
+  verifyMfa: (data: { token: string }) => {
+    return apiClient.post(API_ENDPOINTS.VERIFY_MFA, {
+      token: data.token,
+    });
+  },
+  enableMfa: () => {
+    return apiClient.post(API_ENDPOINTS.ENABLE_MFA);
+  },
 
+  verifyMfaSetup: (data: { token: string }) => {
+    return apiClient.post(API_ENDPOINTS.VERIFY_MFA_SETUP, {
+      token: data.token,
+    });
+  },
 
 
 
@@ -87,6 +98,10 @@ verifyMfa: (data: { token: string }) => {
 
   getMe: () => {
     return apiClient.get(API_ENDPOINTS.ME);
+  },
+
+    refreshMe: () => {
+    return apiClient.post(API_ENDPOINTS.REFRESH);
   },
 };
 

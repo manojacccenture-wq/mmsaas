@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import authService from '@/features/auth/api/authApi';
 import type { AxiosError } from "axios";
-import type { LoginRequest, RegisterRequest, /* RequestPasswordResetRequest, */ ResetPasswordRequest } from '@/features/auth/api/auth.types';
+import type { LoginRequest, RegisterRequest, /* RequestPasswordResetRequest, */ ResetPasswordRequest, } from '@/features/auth/api/auth.types';
 
 
 export const loginAsync = createAsyncThunk<
@@ -28,10 +28,16 @@ export const restoreSessionAsync = createAsyncThunk(
   "auth/restoreSession",
   async (_, { rejectWithValue }) => {
     try {
+      await authService.refreshMe();
+    } catch (err) {
+      return rejectWithValue("No session");
+    }
+
+    try {
       const response = await authService.getMe();
       return response.data;
-    } catch (error) {
-      return rejectWithValue("Not authenticated");
+    } catch (err) {
+      return rejectWithValue("Failed to fetch user");
     }
   }
 );
@@ -95,33 +101,11 @@ export const logoutAsync = createAsyncThunk<
   }
 );
 
-// export const logoutAsync = createAsyncThunk<
-//   { success: boolean },
-//   void,
-//   { rejectValue: string }
-// >(
-//   "auth/logout",
-//   async () => {
-//     return { success: true }; // always success
-//   }
-// );
-
-// export const requestPasswordResetAsync = createAsyncThunk(
-//   'auth/requestPasswordReset',
-//   async (identifier, { rejectWithValue }) => {
-//     try {
-//       const response = await authService.requestPasswordReset(identifier);
-//       return response;
-//     } catch (error) {
-//       return rejectWithValue(error.message);
-//     }
-//   }
-// );
-
 export const requestPasswordResetAsync = createAsyncThunk(
   "auth/requestPasswordReset",
   async ({ identifier }: { identifier: string }, { rejectWithValue }) => {
     try {
+
       const response = await authService.requestPasswordReset(identifier);
       return response.data; // IMPORTANT
     } catch (error: any) {

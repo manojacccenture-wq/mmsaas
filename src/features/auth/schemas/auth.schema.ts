@@ -41,3 +41,13 @@ export const mfaSchema = z.object({
 });
 
 export type MfaSchemaType = z.infer<typeof mfaSchema>;
+
+
+export const totpSetupSchema = z.object({
+  otp: z
+    .string()
+    .min(1, "Code is required")
+    .regex(/^\d{6}$/, "Code must be exactly 6 digits"),
+});
+
+export type TotpSetupSchemaType = z.infer<typeof totpSetupSchema>;

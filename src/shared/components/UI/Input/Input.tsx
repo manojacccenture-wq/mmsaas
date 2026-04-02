@@ -137,7 +137,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       font-normal
       leading-[16px]
       font-['Outfit',sans-serif]
-      ${error ? "text-[#f44444]" : "text-[#666666]"}
+      ${error ? "text-[#f44444] ml-[2%]" : "text-[#666666]"}
     `
       .replace(/\s+/g, " ")
       .trim();

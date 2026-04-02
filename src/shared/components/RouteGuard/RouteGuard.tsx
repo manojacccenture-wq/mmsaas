@@ -34,12 +34,9 @@ const { isAuthenticated, mfaPending, user, firstTimeLogin, otpType } =useAppSele
   const hasLoggedOut = useRef(false);
 
   // 🔐 First time login enforcement
-  if (isAuthenticated && firstTimeLogin) {
-    // allow ONLY reset page
-    if (location.pathname !== "/reset_Flow") {
-      return <Navigate to="/reset_Flow" replace />;
-    }
-  }
+if (requireResetState && !firstTimeLogin) {
+  return <Navigate to="/dashboard" replace />;
+}
 
   // 🚫 GLOBAL BLOCK
   if (role === "operator") {
@@ -53,9 +50,9 @@ const { isAuthenticated, mfaPending, user, firstTimeLogin, otpType } =useAppSele
 
 
   // 1️⃣ Public route (like login, signup)
-  if (requirePublic && isAuthenticated && !mfaPending) {
-    return <Navigate to="/dashboard" replace />;
-  }
+if (requirePublic && isAuthenticated && !mfaPending && !firstTimeLogin) {
+  return <Navigate to="/dashboard" replace />;
+}
 
   // 2️⃣ Protected route
   if (requireAuth) {
@@ -70,7 +67,8 @@ const { isAuthenticated, mfaPending, user, firstTimeLogin, otpType } =useAppSele
 
   // 3️⃣ MFA route
 if (requireMfa) {
-  if (!mfaPending) {
+  // ✅ Allow staying if just authenticated (for modal)
+  if (!mfaPending && !isAuthenticated) {
     return <Navigate to="/" replace />;
   }
 
@@ -106,6 +104,8 @@ if (requireResetState && !firstTimeLogin) {
 
   return children;
 };
+
+
 
 export default RouteGuard;
 

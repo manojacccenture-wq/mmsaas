@@ -10,12 +10,13 @@ const SignUp = lazy(() => import("@/features/auth/pages/SignUp"));
 const ForgotPassword = lazy(() => import("@/features/auth/pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("@/features/auth/pages/ResetPassword"));
 const MFA = lazy(() => import("@/features/auth/pages/MFA"));
+const SetupTotp = lazy(() => import("@/features/auth/pages/SetupTotp"));
 
 // // Dashboard
 
-
-import AccessDenied from "@/features/AccessDenied/AccessDenied";
-import PasswordReset from "@/features/auth/pages/PasswordReset";
+const AccessDenied = lazy(() => import("@/features/AccessDenied/AccessDenied"));
+const PasswordReset = lazy(() => import("@/features/auth/pages/PasswordReset"));
+const Dashboard = lazy(() => import("@/features/Dashboard/pages/Dashboard"));
 
 
 
@@ -37,38 +38,25 @@ const AppRouter = () => {
 
         {/* MFA */}
 
-        <Route
-          path="/verify-email-otp"
-          element={
-            <RouteGuard requireMfa>
-              <MFA />
-            </RouteGuard>
-          }
-        />
+        <Route path="/verify-email-otp" element={ <RouteGuard requireMfa> <MFA /></RouteGuard>}/>
 
-        <Route
-          path="/verify-totp"
-          element={
-            <RouteGuard requireMfa>
-              <MFA />
-            </RouteGuard>
-          }
-        />
+        <Route path="/verify-totp" element={ <RouteGuard requireMfa><MFA /> </RouteGuard>}/>
+        <Route path="/setup-totp" element={ <RouteGuard requireAuth> <SetupTotp /></RouteGuard>}/>
 
         {/* <Route path="/mfa" element={<RouteGuard requireMfa> <MFA /></RouteGuard>} /> */}
 
         {/* PROTECTED DASHBOARD AREA */}
 
-        {/* <Route path="/dashboard" element={<RouteGuard requireAuth> <DashboardLayout /> </RouteGuard>}>
-
+        <Route path="/dashboard" element={<RouteGuard requireAuth> <Dashboard /> </RouteGuard>}>
+{/* 
 
           <Route path="registerUser" element={<RouteGuard > <RegisterUser /></RouteGuard>} />
           <Route index element={<RouteGuard requireAuth requiredPermission={PERMISSIONS.VIEW_DASHBOARD}><Overview /></RouteGuard>} />
 
-          <Route path="surveyList" element={<RouteGuard requireAuth requiredPermission={PERMISSIONS.VIEW_TOILETS} ><SurveyList /></RouteGuard>} />
+          <Route path="surveyList" element={<RouteGuard requireAuth requiredPermission={PERMISSIONS.VIEW_TOILETS} ><SurveyList /></RouteGuard>} /> */}
 
 
-        </Route> */}
+        </Route>
 
 
 
