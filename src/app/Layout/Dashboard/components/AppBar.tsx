@@ -1,13 +1,21 @@
 import { useLocation } from "react-router-dom";
 import { ROUTE_TITLES } from "@/app/config/Dashboard/routeTitles";
 import { useAppSelector } from "@/app/store/hook";
+import ContextSwitcher from "@/shared/components/ContextSwitcher/ContextSwitcher";
+import { getRoleConfig } from "@/app/config/getRoleConfig/getRoleConfig";
 
 export default function AppBar() {
   const location = useLocation();
 
-  const { user } = useAppSelector((state) => state.auth);
+  const { user, activeContext } = useAppSelector((state) => state.auth);
 
-  const title = ROUTE_TITLES[location.pathname] || "Dashboard";
+  const roleConfig = getRoleConfig(activeContext);
+
+  const cleanPath = location.pathname
+    .replace(/^\/superadmin/, "")
+    .replace(/^\/app\/[^/]+/, "");
+
+  const title = roleConfig.titles[cleanPath] || "Dashboard";
 
   return (
     <div className="border-b flex items-center p-3 justify-between">
@@ -26,6 +34,8 @@ export default function AppBar() {
             <p className="text-xs text-blue-500">{user.Role}</p>
           </div>
         )}
+
+        <ContextSwitcher />
 
         {/* profile icon */}
         <div className="w-9 h-9 rounded-full bg-gray-300 flex items-center justify-center font-semibold">

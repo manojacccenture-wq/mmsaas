@@ -18,7 +18,7 @@ const App: React.FC = () => {
   const toastMessage = useAppSelector((state) => selectToastMessage(state));
   const toastType = useAppSelector((state) => selectToastType(state));
   const toastDuration = useAppSelector((state) => selectToastDuration(state));
-  const { loading } = useAppSelector((state) => state.auth);
+  const { loading,sessionRestored } = useAppSelector((state) => state.auth);
 
 
   const handleToastClose = (): void => {
@@ -26,8 +26,10 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    dispatch(restoreSessionAsync());
-  }, [dispatch]);
+    if(!sessionRestored){
+      dispatch(restoreSessionAsync());
+    } 
+  }, [dispatch,sessionRestored]);
 
   if (loading) {
     return <div>Loading...</div>; // 🔥 or spinner

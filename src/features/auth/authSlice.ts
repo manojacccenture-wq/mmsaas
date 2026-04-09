@@ -16,6 +16,10 @@ interface AuthState {
   error: string | null;
   otpType: "email" | "totp" | null; // NEW FIELD TO TRACK OTP TYPE
   loading: Boolean;
+  contexts: [],
+  activeTenantId: null,
+  activeContext: { tenantId: String | null, role: String | null },
+  sessionRestored: boolean,
 }
 
 const initialState: AuthState = {
@@ -28,7 +32,15 @@ const initialState: AuthState = {
   error: null,
   firstTimeLogin: false,
   otpType: null,
-  loading: true, // 🔥 IMPORTANT
+  loading: true, // 🔥 IMPORTANT,
+  contexts: [],
+  activeTenantId: null,
+  activeContext: {
+    tenantId: null,
+    role: null
+  },
+  sessionRestored: false,
+
 
 };
 
@@ -47,6 +59,14 @@ const authSlice = createSlice({
     clearMfaPending: (state) => {
       state.mfaPending = false;
     },
+    setActiveTenant: (state, action) => {
+      state.activeTenantId = action.payload;
+    },
+    setActiveContext: (state, action) => {
+      state.activeContext = action.payload;
+      state.activeTenantId = action.payload?.tenantId || null;
+    }
+
   },
   extraReducers: (builder) => {
     // Login
@@ -200,7 +220,20 @@ const authSlice = createSlice({
       })
       .addCase(restoreSessionAsync.fulfilled, (state, action) => {
         state.loading = false;
-        state.isAuthenticated = true;
+        state.isAuthenticated = action.payload?.isAuthenticated;
+        const contexts = action.payload.contexts;
+        state.contexts = contexts;
+
+        state.sessionRestored = true;
+
+        const tenant = action.payload.contexts.find(c => c.tenantId);
+        state.activeTenantId = tenant?.tenantId || null;
+        // 🔥 AUTO SELECT DEFAULT CONTEXT
+        const defaultCtx =
+          contexts.find(c => c.tenantId) || contexts[0];
+
+        state.activeContext = defaultCtx;
+
         state.user = action.payload.user;
       })
       .addCase(restoreSessionAsync.rejected, (state) => {
@@ -213,5 +246,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearError, setMfaPending, clearMfaPending } = authSlice.actions;
+export const { clearError, setMfaPending, clearMfaPending, setActiveTenant,setActiveContext } = authSlice.actions;
 export default authSlice.reducer;

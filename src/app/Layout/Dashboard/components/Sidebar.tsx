@@ -1,10 +1,11 @@
+import { useState } from "react";
 import { SIDEBAR_ICONS } from "@/app/config/Dashboard/sidebarIcons/SidebarIcons";
-import { hasPermission } from "@/utils/permissionUtils/permissionUtils";
-import { menuConfig } from "@/app/config/Dashboard/menuConfig";
+
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppSelector } from "@/app/store/hook";
 
 import sidebarToggle from "@/assets/Images/Icons/common/sidebar.png";
+import { getRoleConfig } from "@/app/config/getRoleConfig/getRoleConfig";
 
 interface SidebarProps {
   collapsed: boolean;
@@ -14,12 +15,37 @@ interface SidebarProps {
 export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useAppSelector((state) => state.auth);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const {  activeContext } = useAppSelector((state) => state.auth);
 
 
 
-  const filteredMenu = menuConfig.filter((item) =>
-    hasPermission(user?.Role, item.permission)
+  const roleConfig = getRoleConfig(activeContext);
+
+
+
+  const basePath =
+    roleConfig.basePath === "/superadmin"
+      ? "/superadmin"
+      : `/app/${activeContext?.tenantId}`;
+
+  //  Build menu
+  const menuWithPath = roleConfig.menu?.map((item) => ({
+    ...item,
+    fullPath:
+      item.path === "/logout"
+        ? item.path
+        : `${basePath}${item.path}`,
+  }));
+
+
+
+  
+  // 🔥 Permission filter
+  const filteredMenu = menuWithPath.filter((/* item */) =>
+
+    true
+    // hasPermission(user?.Role, item.permission)
   );
 
   return (
@@ -55,20 +81,20 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
 
       {/* Menu */}
       <div className="space-y-2">
-        {filteredMenu.map((item) => (
+        {/* {filteredMenu.map((item) => (
           <div
             key={item.id}
-            onClick={() => navigate(item.path)}
+            onClick={() => navigate(item.fullPath)}
             title={collapsed ? item.label : ""}
             className={`flex items-center h-10 rounded-lg cursor-pointer text-sm
     transition-all duration-300 ease-in-out
     ${collapsed ? "justify-center px-0" : "justify-start gap-3 px-3"}
-    ${location.pathname === item.path
+    ${location.pathname === item.fullPath
                 ? "bg-[#00BFA6]/10 text-[#00BFA6]"
                 : "text-gray-700 hover:bg-[#00BFA6]/10 hover:text-[#00BFA6]"
               }`}
           >
-            {/* Icon */}
+
             <div className={`${collapsed ? "w-full flex justify-center" : ""}`}>
               <img
                 src={SIDEBAR_ICONS[item.id as keyof typeof SIDEBAR_ICONS]}
@@ -77,14 +103,90 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
               />
             </div>
 
-            {/* Text */}
             {!collapsed && (
               <span className="whitespace-nowrap">
                 {item.label}
               </span>
             )}
           </div>
-        ))}
+        ))} */}
+
+        {filteredMenu.map((item) => {
+          const isOpen = openMenu === item.id;
+
+          // 🔥 CASE 1: Parent with children
+          if (item.children) {
+            return (
+              <div key={item.id}>
+                {/* Parent */}
+                <div
+                  onClick={() =>
+                    setOpenMenu(isOpen ? null : item.id)
+                  }
+                  className="flex items-center h-10 px-3 cursor-pointer hover:bg-gray-100 rounded"
+                >
+                  <img
+                    src={SIDEBAR_ICONS[item.id as keyof typeof SIDEBAR_ICONS]}
+                    className="w-5 h-5"
+                  />
+                  {!collapsed && (
+                    <span className="ml-3">{item.label}</span>
+                  )}
+                </div>
+
+                {/* Children */}
+                {isOpen && !collapsed && (
+                  <div className="ml-8 mt-1 space-y-1">
+                    {item.children.map((child) => {
+                      const fullPath = `${basePath}${child.path}`;
+
+                      return (
+                        <div
+                          key={child.id}
+                          onClick={() => navigate(fullPath)}
+                          className={`text-sm cursor-pointer px-2 py-1 rounded
+                    ${location.pathname === fullPath
+                              ? "text-[#00BFA6]"
+                              : "text-gray-600 hover:text-[#00BFA6]"
+                            }`}
+                        >
+                          {child.label}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          }
+
+          // 🔥 CASE 2: Normal item
+          const fullPath =
+            item.path === "/logout"
+              ? item.path
+              : `${basePath}${item.path}`;
+
+          return (
+            <div
+              key={item.id}
+              onClick={() => navigate(fullPath)}
+              className={`flex items-center h-10 px-3 cursor-pointer rounded
+        ${location.pathname === fullPath
+                  ? "bg-[#00BFA6]/10 text-[#00BFA6]"
+                  : "text-gray-700 hover:bg-[#00BFA6]/10"
+                }`}
+            >
+              <img
+                src={SIDEBAR_ICONS[item.id as keyof typeof SIDEBAR_ICONS]}
+                className="w-5 h-5"
+              />
+
+              {!collapsed && (
+                <span className="ml-3">{item.label}</span>
+              )}
+            </div>
+          );
+        })}
       </div>
     </aside>
   );

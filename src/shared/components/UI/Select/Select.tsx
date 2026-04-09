@@ -1,6 +1,30 @@
 import React from "react";
 
-const Select = React.forwardRef(
+type OptionType =
+  | string
+  | {
+      value?: string | number;
+      label?: string;
+    };
+
+interface SelectProps
+  extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "size"> {
+  label?: string;
+  options?: OptionType[];
+  value?: string | number;
+  defaultValue?: string | number;
+  onChange?: React.ChangeEventHandler<HTMLSelectElement>;
+  error?: boolean;
+  helperText?: string;
+  variant?: "default" | "error" | "success" | "disabled";
+  size?: "sm" | "md" | "lg"; // ✅ your custom size stays unchanged
+  disabled?: boolean;
+  className?: string;
+  containerClass?: string;
+  placeholder?: string;
+}
+
+const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
   (
     {
       label,
@@ -20,8 +44,6 @@ const Select = React.forwardRef(
     },
     ref
   ) => {
-    /* ================= VARIANTS ================= */
-
     const variants = {
       default: "select-default",
       error: "select-error",
@@ -58,18 +80,25 @@ const Select = React.forwardRef(
 
             {options.map((option) => (
               <option
-                key={option.value || option}
-                value={option.value || option}
+                key={
+                  typeof option === "object"
+                    ? option.value ?? option.label
+                    : option
+                }
+                value={
+                  typeof option === "object"
+                    ? option.value ?? option.label
+                    : option
+                }
               >
-                {option.label || option}
+                {typeof option === "object"
+                  ? option.label ?? option.value
+                  : option}
               </option>
             ))}
           </select>
 
-          {/* Custom Arrow */}
-          <div className="select-arrow">
-            ▼
-          </div>
+          <div className="select-arrow">▼</div>
         </div>
 
         {helperText && (
