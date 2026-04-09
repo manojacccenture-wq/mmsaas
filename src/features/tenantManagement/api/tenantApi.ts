@@ -1,34 +1,25 @@
 // features/tenantManagement/api/tenantApi.ts
 
 import { baseApi } from "@/app/store/api/baseApi";
+import { get, post } from "@/app/store/api/apiHelpers"
 
 export const tenantApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getTenants: builder.query({
-      query: ({ page = 1, limit = 10 }) => ({
-        url: "http://localhost:5000/v1/api/tenant",
-        method: "GET",
-        params: { page, limit },
-      }),
+      query: get("/v1/api/tenant"),
       providesTags: ["Tenant"],
     }),
-
     getTenantUsers: builder.query({
-      query: (tenantId: string) => ({
-        url: `http://localhost:5000/v1/api/tenant/${tenantId}/users`,
-        method: "GET",
-      }),
+      query: (tenantId: string) =>
+        get(`/v1/api/tenant/${tenantId}/users`)(),
     }),
+
 
     createTenant: builder.mutation({
-      query: (body) => ({
-        url: "http://localhost:5000/v1/api/tenant/create-with-admin",
-        method: "POST",
-        data: body,
-      }),
+      query: post("/v1/api/tenant/create-with-admin"),
       invalidatesTags: ["Tenant"],
     }),
-    
+
   }),
 });
 
