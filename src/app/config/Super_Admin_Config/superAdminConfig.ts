@@ -1,8 +1,10 @@
 // import { PERMISSIONS } from "../permission";
 // import { SIDEBAR_ICONS } from "../sidebarIcons/SidebarIcons";
 
+
+const basePath = "/superadmin";
 export const superAdminConfig = {
-  basePath: "/superadmin",
+  basePath,
 
   menu: [
     {
@@ -15,6 +17,13 @@ export const superAdminConfig = {
       id: "tenants",
       label: "Tenants",
       path: "/tenants",
+    },
+
+    {
+      id: "logout",
+      label: "Logout",
+      path: `/logout`,
+      // permission: PERMISSIONS.PUBLIC,
     },
     // Keep belowe code for nested path as I want for reference
 
@@ -39,12 +48,7 @@ export const superAdminConfig = {
 
 
 
-    {
-      id: "logout",
-      label: "Logout",
-      path: "/logout",
-      // permission: PERMISSIONS.PUBLIC,
-    },
+
   ],
 
   // icons: SIDEBAR_ICONS,

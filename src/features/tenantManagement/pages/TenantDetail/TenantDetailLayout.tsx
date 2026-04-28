@@ -5,7 +5,7 @@ const TenantDetailLayout = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-xl mb-4">Tenant</h1>
+      {/* <h1 className="text-xl mb-4">Tenant</h1> */}
 
       {/* Tabs */}
       <div className="flex gap-4 mb-4">

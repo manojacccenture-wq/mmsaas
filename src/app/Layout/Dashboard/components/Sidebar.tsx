@@ -62,7 +62,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
       >
         {!collapsed && (
           <h1 className="text-[#00BFA6] font-bold text-lg whitespace-nowrap">
-            Survey Management
+            MSAAS
           </h1>
         )}
 
@@ -81,36 +81,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
 
       {/* Menu */}
       <div className="space-y-2">
-        {/* {filteredMenu.map((item) => (
-          <div
-            key={item.id}
-            onClick={() => navigate(item.fullPath)}
-            title={collapsed ? item.label : ""}
-            className={`flex items-center h-10 rounded-lg cursor-pointer text-sm
-    transition-all duration-300 ease-in-out
-    ${collapsed ? "justify-center px-0" : "justify-start gap-3 px-3"}
-    ${location.pathname === item.fullPath
-                ? "bg-[#00BFA6]/10 text-[#00BFA6]"
-                : "text-gray-700 hover:bg-[#00BFA6]/10 hover:text-[#00BFA6]"
-              }`}
-          >
-
-            <div className={`${collapsed ? "w-full flex justify-center" : ""}`}>
-              <img
-                src={SIDEBAR_ICONS[item.id as keyof typeof SIDEBAR_ICONS]}
-                alt={item.label}
-                className="w-5 h-5 object-contain"
-              />
-            </div>
-
-            {!collapsed && (
-              <span className="whitespace-nowrap">
-                {item.label}
-              </span>
-            )}
-          </div>
-        ))} */}
-
+ 
         {filteredMenu.map((item) => {
           const isOpen = openMenu === item.id;
 
@@ -139,6 +110,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
                   <div className="ml-8 mt-1 space-y-1">
                     {item.children.map((child) => {
                       const fullPath = `${basePath}${child.path}`;
+                      console.log('fullPath: ', fullPath)
 
                       return (
                         <div
@@ -163,7 +135,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
           // 🔥 CASE 2: Normal item
           const fullPath =
             item.path === "/logout"
-              ? item.path
+              ? `${basePath}${item.path}`
               : `${basePath}${item.path}`;
 
           return (

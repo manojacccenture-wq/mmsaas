@@ -9,6 +9,7 @@ import TenantOverview from "@/features/tenantManagement/pages/TenantDetail/Tenan
 import TenantUsers from "@/features/tenantManagement/pages/TenantDetail/TenantUsers";
 import TenantRoles from "@/features/tenantManagement/pages/TenantDetail/TenantRoles";
 import TenantSettings from "@/features/tenantManagement/pages/TenantDetail/TenantSettings";
+import  Logout from "@/features/auth/pages/Logout";
 
 const SuperAdminRoutes = () => {
   return (
@@ -37,6 +38,8 @@ const SuperAdminRoutes = () => {
             <Route path="settings" element={<TenantSettings />} />
           </Route>
         </Route>
+
+        <Route path="/logout" element={<Logout />} />
       </Route>
     </Routes>
   );

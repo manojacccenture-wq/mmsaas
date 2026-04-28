@@ -162,6 +162,13 @@ const authSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(logoutAsync.fulfilled, (state) => {
+
+        state.user = null;
+        state.tempCredentials = null;
+        state.contexts = [];
+        state.activeContext = { tenantId: null, role: null };
+        state.activeTenantId = null;
+        state.sessionRestored = false;
         state.status = 'idle';
         state.isAuthenticated = false;
         state.mfaPending = false;
@@ -246,5 +253,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearError, setMfaPending, clearMfaPending, setActiveTenant,setActiveContext } = authSlice.actions;
+export const { clearError, setMfaPending, clearMfaPending, setActiveTenant, setActiveContext } = authSlice.actions;
 export default authSlice.reducer;

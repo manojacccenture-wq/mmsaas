@@ -34,7 +34,7 @@ const TenantUsers = () => {
     <div className="p-6">
       {/* 🔥 Header */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-xl font-semibold">Tenant Users</h1>
+        <h1 className="text-xl font-semibold">{/* Tenant Users */}</h1>
 
         <Button size="sm" variant="primary">
           + Add User

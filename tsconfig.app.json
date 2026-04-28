@@ -23,16 +23,17 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    "baseUrl": "src",
+
+    /* Path aliases (TS 7 safe) */
     "paths": {
-    "@/*": ["*"],
-    "@/app/*": ["app/*"],
-    "@/features/*": ["features/*"],
-    "@/shared/*": ["shared/*"],
-    "@/infrastructure/*": ["infrastructure/*"],
-    "@/assets/*": ["assets/*"],
-    "@/styles/*": ["styles/*"],
-      "@/utils/*": ["utils/*"]
+      "@/*": ["./src/*"],
+      "@/app/*": ["./src/app/*"],
+      "@/features/*": ["./src/features/*"],
+      "@/shared/*": ["./src/shared/*"],
+      "@/infrastructure/*": ["./src/infrastructure/*"],
+      "@/assets/*": ["./src/assets/*"],
+      "@/styles/*": ["./src/styles/*"],
+      "@/utils/*": ["./src/utils/*"]
     }
   },
   "include": ["src"]

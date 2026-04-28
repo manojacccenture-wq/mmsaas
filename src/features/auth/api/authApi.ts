@@ -12,9 +12,9 @@ const API_ENDPOINTS = {
   VERIFY_MFA: "v1/api/auth/verify-login-mfa",
   ENABLE_MFA: "v1/api/auth/enable-mfa",
   VERIFY_MFA_SETUP: "v1/api/auth/verify-mfa-setup",
-  LOGOUT: "/api/Account/Logout",
-  FORGOT_PASSWORD: "/api/Account/ForgotPassword",
-  RESET_PASSWORD: "/api/Account/CustomResetPassword",
+  LOGOUT: "v1/api/auth/logout",
+  FORGOT_PASSWORD: "v1/api/Account/ForgotPassword",
+  RESET_PASSWORD: "v1/api/Account/CustomResetPassword",
   REFRESH: "v1/api/auth/refresh",
 };
 

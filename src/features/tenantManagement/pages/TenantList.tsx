@@ -27,7 +27,7 @@ const TenantList = () => {
   return (
     <div className="p-6">
       <div className="flex justify-between mb-6">
-        <h1>Tenants</h1>
+        <h1></h1>
 
         <Button size="sm" onClick={handleCreateTenant}>
           + Create Tenant
