@@ -14,6 +14,7 @@ const ContextSwitcher = () => {
   const dispatch = useAppDispatch();
 
   const { contexts } = useAppSelector((state) => state.auth);
+  console.log('contexts: ', contexts)
 
   const handleSelect = (value: string) => {
     
@@ -21,6 +22,7 @@ const ContextSwitcher = () => {
       const key = c.tenantId ? `${c.tenantId}-${c.role}` : "superadmin";
       return key === value;
     });
+    console.log('ctx: ', ctx)
     
 
     if (!ctx) return;

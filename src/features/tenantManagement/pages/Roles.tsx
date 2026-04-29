@@ -3,62 +3,84 @@ import { useParams } from "react-router-dom";
 import Table, { type Column } from "@/shared/components/UI/Table/Table";
 import Button from "@/shared/components/UI/Button/Button";
 import Modal from "@/shared/components/Modal/Modal";
-import UserFormModal from "../../components/UserFormModal";
-import { useUsers } from "../../hooks/useUsers";
-import type { TenantUserUI } from "../../api/tenant.types";
-import type { CreateUserFormData, UpdateUserFormData } from "../../schema/users.schema";
+import RoleFormModal from "../components/RoleFormModal";
+import { useRoles } from "../hooks/useRoles";
+import { getPermissionLabel } from "../config/permissionsConfig";
+import type { RoleUI } from "../api/roles.types";
+import type { CreateRoleFormData, UpdateRoleFormData } from "../schema/roles.schema";
 
-const TenantUsers = () => {
+const Roles = () => {
   const { tenantId } = useParams();
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<TenantUserUI | null>(null);
+  const [selectedRole, setSelectedRole] = useState<RoleUI | null>(null);
 
-  const { users, isLoading, isCreating, isUpdating, isDeleting, handleCreate, handleUpdate, handleDelete } = useUsers(tenantId);
+  const { roles, isLoading, isCreating, isUpdating, isDeleting, handleCreate, handleUpdate, handleDelete } = useRoles(tenantId);
 
   const handleOpenCreateForm = () => {
-    setSelectedUser(null);
+    setSelectedRole(null);
     setIsFormModalOpen(true);
   };
 
-  const handleOpenEditForm = (user: TenantUserUI) => {
-    setSelectedUser(user);
+  const handleOpenEditForm = (role: RoleUI) => {
+    setSelectedRole(role);
     setIsFormModalOpen(true);
   };
 
-  const handleOpenDeleteConfirm = (user: TenantUserUI) => {
-    setSelectedUser(user);
+  const handleOpenDeleteConfirm = (role: RoleUI) => {
+    setSelectedRole(role);
     setIsDeleteModalOpen(true);
   };
 
-  const handleFormSubmit = async (data: CreateUserFormData | UpdateUserFormData) => {
-    if (selectedUser) {
-      await handleUpdate(selectedUser.id, data);
+  const handleFormSubmit = async (data: CreateRoleFormData | UpdateRoleFormData) => {
+    if (selectedRole) {
+      await handleUpdate(selectedRole.id, data);
     } else {
       await handleCreate(data);
     }
   };
 
   const handleConfirmDelete = async () => {
-    if (selectedUser) {
-      await handleDelete(selectedUser.id);
+    if (selectedRole) {
+      await handleDelete(selectedRole.id);
       setIsDeleteModalOpen(false);
-      setSelectedUser(null);
+      setSelectedRole(null);
     }
   };
 
-  const columns: Column<TenantUserUI>[] = [
+  const columns: Column<RoleUI>[] = [
     {
-      key: "email",
-      label: "Email",
+      key: "name",
+      label: "Role Name",
     },
     {
-      key: "role",
-      label: "Role",
+      key: "description",
+      label: "Description",
       render: (value) => (
-        <span className="px-2 py-1 rounded bg-blue-100 text-blue-700 text-sm">
-          {value}
+        <span className="text-gray-600">
+          {value || "—"}
         </span>
+      ),
+    },
+    {
+      key: "permissions",
+      label: "Permissions",
+      render: (value: string[]) => (
+        <div className="flex flex-wrap gap-1">
+          {value.slice(0, 2).map((perm) => (
+            <span
+              key={perm}
+              className="px-2 py-1 rounded bg-green-100 text-green-700 text-xs"
+            >
+              {getPermissionLabel(perm)}
+            </span>
+          ))}
+          {value.length > 2 && (
+            <span className="px-2 py-1 text-xs text-gray-600">
+              +{value.length - 2} more
+            </span>
+          )}
+        </div>
       ),
     },
   ];
@@ -67,24 +89,24 @@ const TenantUsers = () => {
     <div className="p-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-xl font-semibold">Users</h1>
+        <h1 className="text-xl font-semibold">Roles</h1>
         <Button size="sm" variant="primary" onClick={handleOpenCreateForm}>
-          + Add User
+          + Create Role
         </Button>
       </div>
 
       {/* Table */}
-      <Table<TenantUserUI>
+      <Table<RoleUI>
         columns={columns}
-        data={users}
+        data={roles}
         loading={isLoading}
-        emptyMessage="No users found"
-        actions={(user) => (
+        emptyMessage="No roles found"
+        actions={(role) => (
           <div className="flex gap-2">
             <Button
               size="sm"
               variant="outlinePrimary"
-              onClick={() => handleOpenEditForm(user)}
+              onClick={() => handleOpenEditForm(role)}
               disabled={isUpdating || isDeleting}
             >
               Edit
@@ -92,7 +114,7 @@ const TenantUsers = () => {
             <Button
               size="sm"
               variant="outlineDanger"
-              onClick={() => handleOpenDeleteConfirm(user)}
+              onClick={() => handleOpenDeleteConfirm(role)}
               disabled={isDeleting}
             >
               Delete
@@ -101,13 +123,13 @@ const TenantUsers = () => {
         )}
       />
 
-      {/* User Form Modal */}
-      <UserFormModal
+      {/* Role Form Modal */}
+      <RoleFormModal
         isOpen={isFormModalOpen}
         onClose={() => setIsFormModalOpen(false)}
         onSubmit={handleFormSubmit}
         isLoading={isCreating || isUpdating}
-        user={selectedUser || undefined}
+        role={selectedRole || undefined}
       />
 
       {/* Delete Confirmation Modal */}
@@ -115,23 +137,23 @@ const TenantUsers = () => {
         isOpen={isDeleteModalOpen}
         onClose={() => {
           setIsDeleteModalOpen(false);
-          setSelectedUser(null);
+          setSelectedRole(null);
         }}
-        header={<h2 className="text-lg font-semibold">Delete User</h2>}
+        header={<h2 className="text-lg font-semibold">Delete Role</h2>}
         width="400px"
       >
         <div className="flex flex-col gap-4">
           <p className="text-gray-600">
-            Are you sure you want to delete this user? This action cannot be undone.
+            Are you sure you want to delete this role? This action cannot be undone.
           </p>
-          <p className="font-semibold text-gray-900">{selectedUser?.email}</p>
+          <p className="font-semibold text-gray-900">{selectedRole?.name}</p>
 
           <div className="flex justify-end gap-3 mt-6">
             <Button
               variant="outlineSecondary"
               onClick={() => {
                 setIsDeleteModalOpen(false);
-                setSelectedUser(null);
+                setSelectedRole(null);
               }}
               disabled={isDeleting}
             >
@@ -151,4 +173,4 @@ const TenantUsers = () => {
   );
 };
 
-export default TenantUsers;
+export default Roles;

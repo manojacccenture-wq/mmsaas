@@ -3,12 +3,12 @@ import { useParams } from "react-router-dom";
 import Table, { type Column } from "@/shared/components/UI/Table/Table";
 import Button from "@/shared/components/UI/Button/Button";
 import Modal from "@/shared/components/Modal/Modal";
-import UserFormModal from "../../components/UserFormModal";
-import { useUsers } from "../../hooks/useUsers";
-import type { TenantUserUI } from "../../api/tenant.types";
-import type { CreateUserFormData, UpdateUserFormData } from "../../schema/users.schema";
+import UserFormModal from "../components/UserFormModal";
+import { useUsers } from "../hooks/useUsers";
+import type { TenantUserUI } from "../api/tenant.types";
+import type { CreateUserFormData, UpdateUserFormData } from "../schema/users.schema";
 
-const TenantUsers = () => {
+const Users = () => {
   const { tenantId } = useParams();
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -151,4 +151,4 @@ const TenantUsers = () => {
   );
 };
 
-export default TenantUsers;
+export default Users;

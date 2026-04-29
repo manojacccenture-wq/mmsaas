@@ -3,6 +3,8 @@ import RouteGuard from "@/shared/components/RouteGuard/RouteGuard";
 import DashboardLayout from "@/app/Layout/Dashboard/DashboardLayout";
 import Dashboard from "@/features/Dashboard/pages/Dashboard";
 import Logout from "@/features/auth/pages/Logout";
+import Users from "@/features/tenantManagement/pages/Users";
+import Roles from "@/features/tenantManagement/pages/Roles";
 
 const TenantRoutes = () => {
   return (
@@ -19,6 +21,13 @@ const TenantRoutes = () => {
 
         {/* matches /app/:tenantId/dashboard */}
         <Route path="dashboard" element={<Dashboard />} />
+        
+        {/* matches /app/:tenantId/users */}
+        <Route path="users" element={<Users />} />
+
+        {/* matches /app/:tenantId/roles */}
+        <Route path="roles" element={<Roles />} />
+        
         <Route path="logout" element={<Logout />} />
       </Route>
     </Routes>
