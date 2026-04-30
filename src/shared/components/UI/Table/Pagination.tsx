@@ -57,7 +57,7 @@ const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <div className="flex items-center justify-between px-6 py-4 bg-white border-t border-[var(--color-neutral-20)]">
-      <p className="text-sm font-normal leading-5 text-[var(--color-neutral-40)] font-['Outfit',sans-serif]">
+      <p className="text-sm font-normal leading-5 text-muted">
         Showing {startItem} to {endItem} of {totalCount} results
       </p>
 

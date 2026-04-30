@@ -56,7 +56,7 @@ const Users = () => {
       key: "role",
       label: "Role",
       render: (value) => (
-        <span className="px-2 py-1 rounded bg-blue-100 text-blue-700 text-sm">
+        <span className="px-2 py-1 rounded bg-[var(--color-blue-100)] text-primary text-sm">
           {value}
         </span>
       ),
@@ -67,7 +67,7 @@ const Users = () => {
     <div className="p-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-xl font-semibold">Users</h1>
+        <h1>Users</h1>
         <Button size="sm" variant="primary" onClick={handleOpenCreateForm}>
           + Add User
         </Button>
@@ -117,14 +117,14 @@ const Users = () => {
           setIsDeleteModalOpen(false);
           setSelectedUser(null);
         }}
-        header={<h2 className="text-lg font-semibold">Delete User</h2>}
+        header={<h2>Delete User</h2>}
         width="400px"
       >
         <div className="flex flex-col gap-4">
-          <p className="text-gray-600">
+          <p className="text-muted">
             Are you sure you want to delete this user? This action cannot be undone.
           </p>
-          <p className="font-semibold text-gray-900">{selectedUser?.email}</p>
+          <p className="text-heading font-semibold">{selectedUser?.email}</p>
 
           <div className="flex justify-end gap-3 mt-6">
             <Button

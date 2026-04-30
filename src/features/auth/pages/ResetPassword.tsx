@@ -98,12 +98,12 @@ const ResetPassword: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-md rounded-2xl p-8">
-        <h2 className="text-2xl font-bold text-center mb-6">
+        <h2 className="text-center mb-6">
           Reset Password
         </h2>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
+          <div className="mb-4 p-3 bg-[var(--color-red-50)] border border-[var(--color-red-200)] rounded text-danger text-sm">
             {error}
           </div>
         )}

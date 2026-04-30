@@ -19,12 +19,12 @@ const StatCard = ({
       </div>
 
       <div>
-        <p className="text-xs text-[var(--color-neutral-60)]">
+        <p className="text-xs text-muted">
           {label}
         </p>
 
         <p
-          className="text-lg font-semibold"
+          className="text-heading font-semibold text-lg"
           style={{ color: valueColor }}
         >
           {value}

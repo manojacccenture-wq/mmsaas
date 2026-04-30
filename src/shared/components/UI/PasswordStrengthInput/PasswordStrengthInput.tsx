@@ -270,7 +270,7 @@ const PasswordStrengthInput = forwardRef<
               </div>
             </div>
 
-            <p className="text-sm mb-2 text-gray-600">
+            <p className="text-sm mb-2 text-muted">
               Password must contain:
             </p>
 

@@ -20,7 +20,7 @@ export default function AppBar() {
   return (
     <div className="border-b flex items-center p-3 justify-between">
       <div className="flex items-center gap-3">
-        <h2 className="text-lg font-medium text-gray-800">
+        <h2 className="text-lg font-medium text-heading">
           {title}
         </h2>
       </div>
@@ -29,16 +29,16 @@ export default function AppBar() {
       <div className="flex items-center gap-3">
         {user && (
           <div className="text-right">
-            <p className="text-sm font-semibold">{user.Name}</p>
-            <p className="text-xs text-gray-500">{user.Email}</p>
-            <p className="text-xs text-blue-500">{user.Role}</p>
+            <p className="text-sm font-semibold text-heading">{user.Name}</p>
+            <p className="text-xs text-muted">{user.Email}</p>
+            <p className="text-xs text-primary">{user.Role}</p>
           </div>
         )}
 
         <ContextSwitcher />
 
         {/* profile icon */}
-        <div className="w-9 h-9 rounded-full bg-gray-300 flex items-center justify-center font-semibold">
+        <div className="w-9 h-9 rounded-full bg-[var(--color-neutral-30)] flex items-center justify-center text-heading font-semibold">
           {user?.Name?.charAt(0)}
         </div>
       </div>

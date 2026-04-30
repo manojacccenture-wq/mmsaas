@@ -85,13 +85,13 @@ const SignIn: React.FC = () => {
               rx="8"
             />
           </svg>
-          <p className="font-extrabold text-base text-text-primary">
+          <p className="font-extrabold text-base text-primary">
             MSAAS
           </p>
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
+          <div className="mb-4 p-3 bg-[var(--color-red-50)] border border-[var(--color-red-200)] rounded text-danger text-sm">
             {error}
           </div>
         )}
@@ -141,10 +141,10 @@ const SignIn: React.FC = () => {
               {isLoading ? "Signing In..." : "Sign In"}
             </Button>
 
-            <p className="font-normal text-[#3a3f51] text-center text-sm sm:text-base">
+            <p className="font-normal text-body text-center text-sm sm:text-base">
               <a
                 href="#"
-                className="text-text-primary hover:underline"
+                className="text-primary hover:underline"
                 onClick={handleNavigateForgotPassword}
               >
                 Forgot password?

@@ -1,0 +1,53 @@
+:root {
+  /* Text Color Roles */
+  --color-heading: var(--color-gray-900);
+  --color-text-body: var(--color-custom-text);
+  --color-text-muted: var(--color-gray-500);
+  --color-brand: var(--color-primary);
+
+  /* Typography Roles */
+  --text-h1: var(--text-4xl);
+  --leading-h1: var(--leading-4xl);
+  --text-h2: var(--text-3xl);
+  --leading-h2: var(--leading-3xl);
+  --text-h3: var(--text-2xl);
+  --leading-h3: var(--leading-2xl);
+  --text-h4: var(--text-xl);
+  --leading-h4: var(--leading-xl);
+  --text-h5: var(--text-lg);
+  --leading-h5: var(--leading-lg);
+  --text-h6: var(--text-base);
+  --leading-h6: var(--leading-base);
+
+  /* Spacing Roles */
+  --spacing-section-py: var(--spacing-28);
+  --spacing-section-mb: var(--spacing-pct-2);
+  --spacing-margin-md: var(--spacing-pct-6);
+  --spacing-margin-lg: var(--spacing-pct-2);
+}
+
+@layer utilities {
+  .text-primary {
+    color: var(--color-brand);
+  }
+
+  .text-muted {
+    color: var(--color-text-muted);
+  }
+
+  .text-heading {
+    color: var(--color-heading);
+  }
+  
+  .text-body {
+    color: var(--color-text-body);
+  }
+
+  .text-danger {
+    color: var(--color-danger);
+  }
+  
+  .text-success {
+    color: var(--color-success);
+  }
+}

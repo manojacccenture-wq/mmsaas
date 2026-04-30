@@ -108,7 +108,7 @@ class ErrorBoundary extends React.Component<
             {/* Icon */}
             <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-6">
               <svg
-                className="h-8 w-8 text-red-600"
+                className="h-8 w-8 text-danger"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -123,12 +123,12 @@ class ErrorBoundary extends React.Component<
             </div>
 
             {/* Title */}
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            <h1 className="mb-4">
               {isDev ? "Application Error (Development)" : "Technical Error"}
             </h1>
 
             {/* Description */}
-            <p className="text-gray-600 mb-6">
+            <p className="text-muted mb-6">
               {isDev
                 ? "An unhandled error occurred in the application."
                 : "Something went wrong. Please try again later or contact support if the issue persists."}
@@ -161,7 +161,7 @@ class ErrorBoundary extends React.Component<
             </div>
 
             {!isDev && (
-              <p className="mt-6 text-sm text-gray-500">
+              <p className="mt-6 text-sm text-muted">
                 Error Reference ID: {Date.now()}
               </p>
             )}

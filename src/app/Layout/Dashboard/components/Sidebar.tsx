@@ -16,7 +16,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [openMenu, setOpenMenu] = useState<string | null>(null);
-  const {  activeContext } = useAppSelector((state) => state.auth);
+  const { activeContext } = useAppSelector((state) => state.auth);
 
 
 
@@ -40,7 +40,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
 
 
 
-  
+
   // 🔥 Permission filter
   const filteredMenu = menuWithPath.filter((/* item */) =>
 
@@ -50,7 +50,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
 
   return (
     <aside
-      className={`h-screen border-r border-gray-100 p-2 
+      className={`h-screen border-r border-[var(--color-neutral-20)] p-2 
       transition-all duration-500 ease-in-out
       ${collapsed ? "w-[80px]" : "w-[250px]"}`}
     >
@@ -61,7 +61,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
   `}
       >
         {!collapsed && (
-          <h1 className="text-[#00BFA6] font-bold text-lg whitespace-nowrap">
+          <h1 className="text-primary font-bold text-lg whitespace-nowrap">
             MSAAS
           </h1>
         )}
@@ -81,7 +81,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
 
       {/* Menu */}
       <div className="space-y-2">
- 
+
         {filteredMenu.map((item) => {
           const isOpen = openMenu === item.id;
 
@@ -94,7 +94,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
                   onClick={() =>
                     setOpenMenu(isOpen ? null : item.id)
                   }
-                  className="flex items-center h-10 px-3 cursor-pointer hover:bg-gray-100 rounded"
+                  className="flex items-center h-10 px-3 cursor-pointer hover:bg-[var(--color-neutral-10)] rounded"
                 >
                   <img
                     src={SIDEBAR_ICONS[item.id as keyof typeof SIDEBAR_ICONS]}
@@ -110,7 +110,6 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
                   <div className="ml-8 mt-1 space-y-1">
                     {item.children.map((child) => {
                       const fullPath = `${basePath}${child.path}`;
-                      console.log('fullPath: ', fullPath)
 
                       return (
                         <div
@@ -118,8 +117,8 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
                           onClick={() => navigate(fullPath)}
                           className={`text-sm cursor-pointer px-2 py-1 rounded
                     ${location.pathname === fullPath
-                              ? "text-[#00BFA6]"
-                              : "text-gray-600 hover:text-[#00BFA6]"
+                              ? "text-primary"
+                              : "text-muted hover:text-primary"
                             }`}
                         >
                           {child.label}
@@ -144,8 +143,8 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
               onClick={() => navigate(fullPath)}
               className={`flex items-center h-10 px-3 cursor-pointer rounded
         ${location.pathname === fullPath
-                  ? "bg-[#00BFA6]/10 text-[#00BFA6]"
-                  : "text-gray-700 hover:bg-[#00BFA6]/10"
+                  ? "bg-[rgba(var(--color-primary-light),0.1)] text-primary"
+                  : "text-muted hover:bg-[rgba(var(--color-primary-light),0.1)]"
                 }`}
             >
               <img

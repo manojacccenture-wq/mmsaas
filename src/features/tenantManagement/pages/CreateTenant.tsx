@@ -41,7 +41,7 @@ const CreateTenant = () => {
 
   return (
     <div className="p-6 max-w-xl mx-auto bg-white rounded shadow  ">
-      <h1 className="text-xl font-semibold mb-6">
+      <h1 className="mb-6">
         Create Tenant
       </h1>
 
@@ -128,7 +128,7 @@ const CreateTenant = () => {
         <div className="flex gap-64 mt-4">
           <Button
             type="button"
-            variant="outlineSecondary"
+            variant="danger"
             onClick={() => navigate(-1)}
           >
             Cancel

@@ -1,9 +1,7 @@
 @layer base {
   body {
-    @apply font-outfit;
-    color: var(--ink);
+    font-family: var(--font-primary);
+    color: var(--color-text-body);
     min-height: 100vh;
   }
 }
-
-

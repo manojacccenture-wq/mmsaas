@@ -1,0 +1,16 @@
+:root {
+  /* Spacing */
+  --spacing-2: 0.5rem;
+  --spacing-4: 1rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-28: 7rem;
+  --spacing-pct-2: 2%;
+  --spacing-pct-6: 6%;
+
+  /* Sizing */
+  --size-max-7xl: 80rem;
+}

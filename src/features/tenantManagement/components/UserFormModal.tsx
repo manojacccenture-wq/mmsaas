@@ -55,7 +55,7 @@ const UserFormModal = ({
       isOpen={isOpen}
       onClose={handleClose}
       header={
-        <h2 className="text-lg font-semibold">
+        <h2>
           {isEdit ? "Edit User" : "Add User"}
         </h2>
       }

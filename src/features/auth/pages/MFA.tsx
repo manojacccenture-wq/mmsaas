@@ -136,21 +136,21 @@ const MFA: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl bg-white rounded-2xl shadow-lg p-6 sm:p-8 md:p-10">
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-4 sm:mb-6">
+        <h2 className="text-center mb-4 sm:mb-6">
           {title}
         </h2>
 
 
-        <p className="text-center text-xs sm:text-sm text-gray-500 mb-2">
+        <p className="text-center text-xs sm:text-sm text-muted mb-2">
           {/* OTP sent to <span>{maskEmail(email ?? "")}</span> */}
         </p>
 
-        <p className="text-center text-xs sm:text-sm text-gray-500 mb-6 sm:mb-8">
+        <p className="text-center text-xs sm:text-sm text-muted mb-6 sm:mb-8">
           {otpMessage}
         </p>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
+          <div className="mb-4 p-3 bg-[var(--color-red-50)] border border-[var(--color-red-200)] rounded text-danger text-sm">
             {error}
           </div>
         )}
@@ -159,17 +159,17 @@ const MFA: React.FC = () => {
           isOpen={showSetupModal}
           onClose={() => setShowSetupModal(false)}
           header={
-            <h3 className="text-lg font-semibold">
+            <h3>
               Enhance Your Security
             </h3>
           }
         >
           <div className="flex flex-col gap-4">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-muted">
               For better security, we recommend enabling an authenticator app (TOTP).
             </p>
 
-            <ul className="text-sm text-gray-500 list-disc pl-5">
+            <ul className="text-sm text-muted list-disc pl-5">
               <li>Protect your account from unauthorized access</li>
               <li>Use apps like Google Authenticator</li>
               <li>Quick & secure login experience</li>
@@ -226,7 +226,7 @@ const MFA: React.FC = () => {
             {isLoading ? "Verifying..." : "Verify OTP"}
           </Button>
           {otpType === "totp" && (
-            <p className="text-center text-xs text-gray-500">
+            <p className="text-center text-xs text-muted">
               Code refreshes every 30 seconds in your authenticator app
             </p>
           )}

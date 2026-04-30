@@ -32,12 +32,12 @@ const PasswordReset: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center  px-4">
       <div className="w-full max-w-md  rounded-2xl  p-6 sm:p-8">
 
-        <h2 className="text-2xl font-bold text-center mb-6">
+        <h2 className="text-center mb-6">
           Reset Password
         </h2>
 
         {/* 🔐 SECURITY MESSAGE */}
-        <div className="mb-4 p-3  border border-blue-200 rounded text-sm text-blue-700">
+        <div className="mb-4 p-3 border border-primary rounded text-sm text-primary">
           For security reasons, you are required to reset your password after
           your first login. Please create a strong password that meets the
           security requirements below.

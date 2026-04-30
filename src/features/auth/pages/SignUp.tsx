@@ -89,12 +89,12 @@ const SignUp: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl rounded-2xl p-6 sm:p-8 md:p-10">
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 sm:mb-8">
+        <h2 className="text-center mb-6 sm:mb-8">
           Create Account
         </h2>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
+          <div className="mb-4 p-3 bg-[var(--color-red-50)] border border-[var(--color-red-200)] rounded text-danger text-sm">
             {error}
           </div>
         )}
@@ -176,7 +176,7 @@ const SignUp: React.FC = () => {
             disabled={isLoading}
           />
           {errors.terms && (
-            <p className="text-red-500 text-xs sm:text-sm mt-1">
+            <p className="text-danger text-xs sm:text-sm mt-1">
               {errors.terms.message}
             </p>
           )}
@@ -199,8 +199,8 @@ const SignUp: React.FC = () => {
                 ? "Creating Account..."
                 : "Sending OTP..."
               : detectedType === "email"
-              ? "Create Account"
-              : "Send OTP"}
+                ? "Create Account"
+                : "Send OTP"}
           </Button>
         </form>
       </div>

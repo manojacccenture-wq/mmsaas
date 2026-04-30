@@ -1,20 +1,13 @@
 @import "tailwindcss";
 
-@theme {
-  --font-outfit: "Outfit", system-ui, sans-serif;
-}
-
-/* Tokens */
-@import "./styles/tokens/index.css";
-
-/* Fonts */
-@import "./styles/font/index.css";
-
-/* Theme */
-@import "./styles/theme/theme.css";
-
-/* Base */
+/* BASE */
 @import "./styles/base/index.css";
 
-/* Components */
+/* TOKENS */
+@import "./styles/tokens/index.css";
+
+/* SEMANTIC */
+@import "./styles/semantic/index.css";
+
+/* COMPONENTS */
 @import "./styles/components/index.css";

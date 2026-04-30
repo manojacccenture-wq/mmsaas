@@ -1,0 +1,88 @@
+@font-face {
+  font-family: "Outfit";
+  src: url("../../assets/fonts/outfit-v15-latin_latin-ext-300.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Outfit";
+  src: url("../../assets/fonts/outfit-v15-latin_latin-ext-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Outfit";
+  src: url("../../assets/fonts/outfit-v15-latin_latin-ext-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Outfit";
+  src: url("../../assets/fonts/outfit-v15-latin_latin-ext-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  font-family: var(--font-primary);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-primary);
+}
+
+h1 {
+  font-size: var(--text-h1);
+  line-height: var(--leading-h1);
+  font-weight: var(--font-bold);
+  color: var(--color-heading);
+}
+
+h2 {
+  font-size: var(--text-h2);
+  line-height: var(--leading-h2);
+  font-weight: var(--font-semibold);
+  color: var(--color-heading);
+}
+
+h3 {
+  font-size: var(--text-h3);
+  line-height: var(--leading-h3);
+  font-weight: var(--font-semibold);
+  color: var(--color-heading);
+}
+
+h4 {
+  font-size: var(--text-h4);
+  line-height: var(--leading-h4);
+  font-weight: var(--font-medium);
+  color: var(--color-heading);
+}
+
+h5 {
+  font-size: var(--text-h5);
+  line-height: var(--leading-h5);
+  font-weight: var(--font-medium);
+  color: var(--color-heading);
+}
+
+h6 {
+  font-size: var(--text-h6);
+  line-height: var(--leading-h6);
+  font-weight: var(--font-medium);
+  color: var(--color-heading);
+}
+
+p {
+  font-size: var(--text-base);
+  line-height: var(--leading-base);
+  font-weight: var(--font-normal);
+  color: var(--color-text-body);
+}

@@ -146,6 +146,8 @@ const authSlice = createSlice({
 
         state.status = "succeeded";
         state.user = action.payload; // 
+        state.contexts = action.payload.contexts;
+
         state.mfaPending = false;
         state.isAuthenticated = true;
         state.tempCredentials = null; // VERY IMPORTANT

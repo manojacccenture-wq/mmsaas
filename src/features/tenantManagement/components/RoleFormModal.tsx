@@ -61,7 +61,7 @@ const RoleFormModal = ({
       isOpen={isOpen}
       onClose={handleClose}
       header={
-        <h2 className="text-lg font-semibold">
+        <h2>
           {isEdit ? "Edit Role" : "Create Role"}
         </h2>
       }
@@ -88,13 +88,13 @@ const RoleFormModal = ({
 
         {/* Permissions */}
         <div className="space-y-4">
-          <label className="block text-sm font-semibold text-gray-900">
+          <label className="block text-sm font-semibold text-heading">
             Permissions
           </label>
 
           {Object.entries(categories).map(([category, perms]) => (
             <div key={category} className="space-y-2">
-              <h4 className="text-sm font-medium text-gray-700 capitalize">
+              <h4 className="capitalize">
                 {category}
               </h4>
 
@@ -131,7 +131,7 @@ const RoleFormModal = ({
           ))}
 
           {errors.permissions && (
-            <p className="text-sm text-red-600 mt-2">
+            <p className="text-sm text-danger mt-2">
               {errors.permissions.message}
             </p>
           )}

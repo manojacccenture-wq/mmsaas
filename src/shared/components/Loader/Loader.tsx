@@ -23,10 +23,10 @@ const Loader: React.FC<LoaderProps> = ({
   };
 
   const colorClasses: Record<LoaderVariant, string> = {
-    primary: "border-blue-500",
-    success: "border-green-500",
-    danger: "border-red-500",
-    dark: "border-gray-800",
+    primary: "border-[var(--color-primary)]",
+    success: "border-[var(--color-success)]",
+    danger: "border-[var(--color-danger)]",
+    dark: "border-[var(--color-gray-900)]",
   };
 
   return (
@@ -41,7 +41,7 @@ const Loader: React.FC<LoaderProps> = ({
         } ${colorClasses[variant]}`}
       />
       {text && (
-        <p className="mt-4 text-gray-600 text-sm font-medium">{text}</p>
+        <p className="mt-4 text-muted text-sm font-medium">{text}</p>
       )}
     </div>
   );

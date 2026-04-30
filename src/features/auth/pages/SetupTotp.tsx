@@ -66,11 +66,11 @@ const SetupTotp: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="bg-white p-6 rounded-xl shadow w-full max-w-md">
-        <h2 className="text-xl font-bold text-center mb-4">
+        <h2 className="text-center mb-4">
           Setup Authenticator
         </h2>
 
-        <p className="text-sm text-gray-500 text-center mb-4">
+        <p className="text-sm text-muted text-center mb-4">
           Scan this QR code using Google Authenticator
         </p>
 
@@ -96,7 +96,7 @@ const SetupTotp: React.FC = () => {
           />
 
           {apiError && (
-            <p className="text-red-500 text-sm text-center">{apiError}</p>
+            <p className="text-danger text-sm text-center">{apiError}</p>
           )}
 
           <Button

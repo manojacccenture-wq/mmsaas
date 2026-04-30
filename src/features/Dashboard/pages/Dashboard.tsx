@@ -3,12 +3,11 @@ import TenantSwitcher from "@/shared/components/tenantSwitcher/tenantSwitcher"
 
 
 const Dashboard = () => {
-  console.log("Dashboard rendered");
 
   return (
     <div>
       Dashboard
-       {/* <TenantSwitcher /> */}
+      {/* <TenantSwitcher /> */}
     </div>
   )
 }

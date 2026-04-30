@@ -57,7 +57,7 @@ const TenantRoles = () => {
       key: "description",
       label: "Description",
       render: (value) => (
-        <span className="text-gray-600">
+        <span className="text-muted">
           {value || "—"}
         </span>
       ),
@@ -70,13 +70,13 @@ const TenantRoles = () => {
           {value.slice(0, 2).map((perm) => (
             <span
               key={perm}
-              className="px-2 py-1 rounded bg-green-100 text-green-700 text-xs"
+              className="px-2 py-1 rounded bg-[var(--color-green-100)] text-success text-xs"
             >
               {getPermissionLabel(perm)}
             </span>
           ))}
           {value.length > 2 && (
-            <span className="px-2 py-1 text-xs text-gray-600">
+            <span className="px-2 py-1 text-xs text-muted">
               +{value.length - 2} more
             </span>
           )}
@@ -89,7 +89,7 @@ const TenantRoles = () => {
     <div className="p-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-xl font-semibold">Roles</h1>
+        <h1>Roles</h1>
         <Button size="sm" variant="primary" onClick={handleOpenCreateForm}>
           + Create Role
         </Button>
@@ -139,14 +139,14 @@ const TenantRoles = () => {
           setIsDeleteModalOpen(false);
           setSelectedRole(null);
         }}
-        header={<h2 className="text-lg font-semibold">Delete Role</h2>}
+        header={<h2>Delete Role</h2>}
         width="400px"
       >
         <div className="flex flex-col gap-4">
-          <p className="text-gray-600">
+          <p className="text-muted">
             Are you sure you want to delete this role? This action cannot be undone.
           </p>
-          <p className="font-semibold text-gray-900">{selectedRole?.name}</p>
+          <p className="text-heading font-semibold">{selectedRole?.name}</p>
 
           <div className="flex justify-end gap-3 mt-6">
             <Button
