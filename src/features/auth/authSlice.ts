@@ -6,7 +6,7 @@ interface TempCredentials {
   password: string;
 }
 interface AuthState {
-  user: any | null; // replace `any` with proper User type later
+  user: any | null; 
   isAuthenticated: boolean;
   mfaPending: boolean;
   firstTimeLogin: boolean;
@@ -14,37 +14,30 @@ interface AuthState {
   resetPasswordEmail: string | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed' | 'pending';
   error: string | null;
-  otpType: "email" | "totp" | null; // NEW FIELD TO TRACK OTP TYPE
+  otpType: "email" | "totp" | null;
   loading: Boolean;
-  contexts: [],
-  activeTenantId: null,
-  activeContext: { tenantId: String | null, role: String | null },
-  sessionRestored: boolean,
+  tenants: any[]; // Updated from contexts
+  activeTenantId: string | null;
+  activeContext: any | null;
+  sessionRestored: boolean;
 }
 
 const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
   mfaPending: false,
-  tempCredentials: null, // Store username + password temporarily during MFA
+  tempCredentials: null,
   resetPasswordEmail: null,
-  status: 'idle', // idle | loading | succeeded | failed
+  status: 'idle',
   error: null,
   firstTimeLogin: false,
   otpType: null,
-  loading: true, // 🔥 IMPORTANT,
-  contexts: [],
-  activeTenantId: null,
-  activeContext: {
-    tenantId: null,
-    role: null
-  },
+  loading: true,
+  tenants: [],
+  activeTenantId: localStorage.getItem("activeTenantId"), // Initialize from storage
+  activeContext: null,
   sessionRestored: false,
-
-
 };
-
-
 
 const authSlice = createSlice({
   name: 'auth',
@@ -61,12 +54,21 @@ const authSlice = createSlice({
     },
     setActiveTenant: (state, action) => {
       state.activeTenantId = action.payload;
+      if (action.payload) {
+        localStorage.setItem("activeTenantId", action.payload);
+      } else {
+        localStorage.removeItem("activeTenantId");
+      }
     },
     setActiveContext: (state, action) => {
       state.activeContext = action.payload;
       state.activeTenantId = action.payload?.tenantId || null;
+      if (state.activeTenantId) {
+        localStorage.setItem("activeTenantId", state.activeTenantId);
+      } else {
+        localStorage.removeItem("activeTenantId");
+      }
     }
-
   },
   extraReducers: (builder) => {
     // Login
@@ -143,14 +145,15 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(verifyMfaAsync.fulfilled, (state, action: any) => {
-
         state.status = "succeeded";
-        state.user = action.payload; // 
-        state.contexts = action.payload.contexts;
-
+        // Backend returns: { msg, isFirstTimeLogin, isSuperAdmin }
+        // We set basic user info; full context will be fetched by restoreSession or next /me call
+        state.user = { 
+          isSuperAdmin: action.payload.isSuperAdmin 
+        };
         state.mfaPending = false;
         state.isAuthenticated = true;
-        state.tempCredentials = null; // VERY IMPORTANT
+        state.tempCredentials = null;
         state.firstTimeLogin = action.payload?.isFirstTimeLogin === true;
       })
       .addCase(verifyMfaAsync.rejected, (state, action: any) => {
@@ -164,22 +167,18 @@ const authSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(logoutAsync.fulfilled, (state) => {
-
         state.user = null;
         state.tempCredentials = null;
-        state.contexts = [];
-        state.activeContext = { tenantId: null, role: null };
+        state.tenants = [];
+        state.activeContext = null;
         state.activeTenantId = null;
+        localStorage.removeItem("activeTenantId"); // 🔥 Clear storage on logout
         state.sessionRestored = false;
         state.status = 'idle';
         state.isAuthenticated = false;
         state.mfaPending = false;
         state.resetPasswordEmail = null;
         state.error = null;
-
-        // ✅ IMPORTANT FIXES
-        state.user = null;
-        state.tempCredentials = null;
       })
       .addCase(logoutAsync.rejected, (state, action: any) => {
         state.status = 'failed';
@@ -227,28 +226,36 @@ const authSlice = createSlice({
       .addCase(restoreSessionAsync.pending, (state) => {
         state.loading = true;
       })
-      .addCase(restoreSessionAsync.fulfilled, (state, action) => {
+      .addCase(restoreSessionAsync.fulfilled, (state, action: any) => {
         state.loading = false;
-        state.isAuthenticated = action.payload?.isAuthenticated;
-        const contexts = action.payload.contexts;
-        state.contexts = contexts;
-
+        state.isAuthenticated = true;
         state.sessionRestored = true;
 
-        const tenant = action.payload.contexts.find(c => c.tenantId);
-        state.activeTenantId = tenant?.tenantId || null;
-        // 🔥 AUTO SELECT DEFAULT CONTEXT
-        const defaultCtx =
-          contexts.find(c => c.tenantId) || contexts[0];
+        // Backend returns: { userId, email, activeContext, tenants }
+        state.user = {
+          userId: action.payload.userId,
+          email: action.payload.email
+        };
 
-        state.activeContext = defaultCtx;
+        state.tenants = action.payload.tenants || [];
+        state.activeContext = action.payload.activeContext || null;
+        state.activeTenantId = action.payload.activeContext?.tenantId || null;
 
-        state.user = action.payload.user;
+        // 🔥 Sync localStorage for API header injection
+        if (state.activeTenantId) {
+          localStorage.setItem("activeTenantId", state.activeTenantId);
+        } else {
+          localStorage.removeItem("activeTenantId"); // Ensure it's cleared for Global access
+        }
       })
       .addCase(restoreSessionAsync.rejected, (state) => {
         state.loading = false;
         state.isAuthenticated = false;
         state.user = null;
+        state.tenants = [];
+        state.activeContext = null;
+        state.activeTenantId = null;
+        localStorage.removeItem("activeTenantId");
       });
 
 

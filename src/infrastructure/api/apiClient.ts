@@ -17,10 +17,19 @@ let failedQueue: FailedRequest[] = [];
 const apiClient = axios.create({
   baseURL,
   timeout: 15000,
-  withCredentials: true, // ⭐ VERY IMPORTANT
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
+});
+
+// 🔥 Automatically inject x-tenant-id from localStorage
+apiClient.interceptors.request.use((config) => {
+  const activeTenantId = localStorage.getItem("activeTenantId");
+  if (activeTenantId && activeTenantId !== "null") {
+    config.headers["x-tenant-id"] = activeTenantId;
+  }
+  return config;
 });
 
 

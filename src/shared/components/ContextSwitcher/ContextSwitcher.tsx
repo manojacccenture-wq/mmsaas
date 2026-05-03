@@ -1,67 +1,49 @@
 
 import { useAppDispatch, useAppSelector } from "@/app/store/hook";
 import { useNavigate } from "react-router-dom";
-import Select from "@/shared/components/UI/Select/Select"; // adjust path if needed
+import Select from "@/shared/components/UI/Select/Select"; 
 import { setActiveContext } from "@/features/auth/authSlice";
-
-type ContextType = {
-  tenantId?: string;
-  role?: string;
-};
 
 const ContextSwitcher = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const { contexts } = useAppSelector((state) => state.auth);
-
+  // 🔥 Updated to use the new 'tenants' and 'user' structure
+  const { tenants, user, activeTenantId } = useAppSelector((state) => state.auth);
 
   const handleSelect = (value: string) => {
-
-    const ctx = contexts.find((c: ContextType) => {
-      const key = c.tenantId ? `${c.tenantId}-${c.role}` : "superadmin";
-      return key === value;
-    });
-
-
-
-    if (!ctx) return;
-
-    // dispatch({
-    //   type: "auth/setActiveContext",
-    //   payload: ctx,
-    // });
-    dispatch(setActiveContext(ctx));
-
-    // 🔥 ROUTE BASED ON ROLE
-    if (!ctx.tenantId) {
-      navigate("/superadmin");
-    } else {
-      navigate(`/app/${ctx.tenantId}/dashboard`);
+    if (value === "global") {
+      localStorage.removeItem("activeTenantId");
+      window.location.href = "/superadmin";
+      return;
     }
+
+    const tenant = tenants.find((t: any) => t.tenantId === value);
+    if (!tenant) return;
+
+    localStorage.setItem("activeTenantId", tenant.tenantId);
+    window.location.href = `/app/${tenant.tenantId}/dashboard`;
   };
 
-  const options = contexts.map((ctx: ContextType) => {
-    const value = ctx.tenantId
-      ? `${ctx.tenantId}-${ctx.role}`
-      : "superadmin";
+  // 🛠️ Build options dynamically from tenants and superadmin status
+  const options = [
+    ...(user?.isSuperAdmin ? [{ value: "global", label: "Super Admin (Platform Access)" }] : []),
+    ...(tenants || []).map((t: any) => ({
+      value: t.tenantId,
+      label: `Tenant: ${t.tenantId} (${t.role})`
+    }))
+  ];
 
-    const label = ctx.tenantId
-      ? `Tenant: ${ctx.tenantId} (${ctx.role})`
-      : "Super Admin (Platform Access)";
-
-    return { value, label };
-  });
+  if (options.length === 0) return null;
 
   return (
     <div className="p-2">
       <Select
-        // label="Switch Context"
         options={options}
-
+        value={activeTenantId || (user?.isSuperAdmin ? "global" : "")}
         size="sm"
         onChange={(e) => handleSelect(e.target.value)}
-        placeholder="Select context"
+        placeholder="Switch context"
       />
     </div>
   );

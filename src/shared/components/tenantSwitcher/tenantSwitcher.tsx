@@ -1,27 +1,39 @@
 import { useDispatch, useSelector } from "react-redux";
+import { setActiveTenant } from "@/features/auth/authSlice";
+import Select from "@/shared/components/UI/Select/Select";
 
 const TenantSwitcher = () => {
   const dispatch = useDispatch();
-  const { contexts, activeTenantId } = useSelector((state: any) => state.auth);
+  const { tenants, activeTenantId } = useSelector((state: any) => state.auth);
   
-
-  const tenants = contexts.filter(c => c.tenantId);
-
   const handleChange = (e: any) => {
-    dispatch({
-      type: "auth/setActiveTenant",
-      payload: e.target.value
-    });
+    const newTenantId = e.target.value;
+    if (newTenantId) {
+      localStorage.setItem("activeTenantId", newTenantId);
+      window.location.href = `/app/${newTenantId}/dashboard`;
+    } else {
+      localStorage.removeItem("activeTenantId");
+      window.location.href = "/superadmin";
+    }
   };
 
+  if (!tenants || tenants.length === 0) return null;
+
+  const options = (tenants || []).map((t: any) => ({
+    value: t.tenantId,
+    label: `${t.tenantId} (${t.role})`
+  }));
+
   return (
-    <select value={activeTenantId || ""} onChange={handleChange}>
-      {tenants.map((t: any) => (
-        <option key={t.tenantId} value={t.tenantId}>
-          {t.tenantId}
-        </option>
-      ))}
-    </select>
+    <div className="flex items-center gap-2 p-1">
+      <Select
+        options={options}
+        value={activeTenantId || ""}
+        size="sm"
+        onChange={handleChange}
+        placeholder="Global / System"
+      />
+    </div>
   );
 };
 

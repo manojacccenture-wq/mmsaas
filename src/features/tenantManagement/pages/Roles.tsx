@@ -1,174 +1,152 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
-import Table, { type Column } from "@/shared/components/UI/Table/Table";
+import {
+  useGetGlobalRolesQuery,
+  useCreateGlobalRoleMutation,
+  useGetIAMPoliciesQuery,
+  useAttachPolicyToRoleMutation
+} from "../api/tenantApi";
 import Button from "@/shared/components/UI/Button/Button";
-import Modal from "@/shared/components/Modal/Modal";
-import RoleFormModal from "../components/RoleFormModal";
-import { useRoles } from "../hooks/useRoles";
-import { getPermissionLabel } from "../config/permissionsConfig";
-import type { RoleUI } from "../api/roles.types";
-import type { CreateRoleFormData, UpdateRoleFormData } from "../schema/roles.schema";
+import Card from "@/shared/components/UI/Card/Card";
+import Input from "@/shared/components/UI/Input/Input";
+import Select from "@/shared/components/UI/Select/Select";
+import Table, { type Column } from "@/shared/components/UI/Table/Table";
 
 const Roles = () => {
-  const { tenantId } = useParams();
-  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedRole, setSelectedRole] = useState<RoleUI | null>(null);
+  // Queries
+  const { data: rolesData, isLoading: rolesLoading } = useGetGlobalRolesQuery({});
+  const { data: policiesData } = useGetIAMPoliciesQuery({});
+  
+  // Mutations
+  const [createRole] = useCreateGlobalRoleMutation();
+  const [attachPolicy] = useAttachPolicyToRoleMutation();
 
-  const { roles, isLoading, isCreating, isUpdating, isDeleting, handleCreate, handleUpdate, handleDelete } = useRoles(tenantId);
+  // Local state
+  const [newRole, setNewRole] = useState({ name: "", code: "" });
+  const [assignment, setAssignment] = useState({ roleId: "", policyId: "" });
 
-  const handleOpenCreateForm = () => {
-    setSelectedRole(null);
-    setIsFormModalOpen(true);
-  };
-
-  const handleOpenEditForm = (role: RoleUI) => {
-    setSelectedRole(role);
-    setIsFormModalOpen(true);
-  };
-
-  const handleOpenDeleteConfirm = (role: RoleUI) => {
-    setSelectedRole(role);
-    setIsDeleteModalOpen(true);
-  };
-
-  const handleFormSubmit = async (data: CreateRoleFormData | UpdateRoleFormData) => {
-    if (selectedRole) {
-      await handleUpdate(selectedRole.id, data);
-    } else {
-      await handleCreate(data);
+  const handleCreate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await createRole(newRole).unwrap();
+      setNewRole({ name: "", code: "" });
+      alert("Role created successfully!");
+    } catch (err) {
+      alert("Failed to create role");
     }
   };
 
-  const handleConfirmDelete = async () => {
-    if (selectedRole) {
-      await handleDelete(selectedRole.id);
-      setIsDeleteModalOpen(false);
-      setSelectedRole(null);
+  const handleAttach = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await attachPolicy(assignment).unwrap();
+      setAssignment({ roleId: "", policyId: "" });
+      alert("Policy attached to role!");
+    } catch (err) {
+      alert("Failed to attach policy");
     }
   };
 
-  const columns: Column<RoleUI>[] = [
-    {
-      key: "name",
-      label: "Role Name",
+  const columns: Column<any>[] = [
+    { key: "name", label: "Role Name" },
+    { 
+      key: "code", 
+      label: "System Code",
+      render: (val) => <code className="bg-gray-100 px-2 py-1 rounded text-xs font-bold">{val}</code>
     },
     {
-      key: "description",
-      label: "Description",
-      render: (value) => (
-        <span className="text-muted">
-          {value || "—"}
-        </span>
-      ),
-    },
-    {
-      key: "permissions",
-      label: "Permissions",
-      render: (value: string[]) => (
-        <div className="flex flex-wrap gap-1">
-          {value.slice(0, 2).map((perm) => (
-            <span
-              key={perm}
-              className="px-2 py-1 rounded bg-[var(--color-green-100)] text-success text-xs"
-            >
-              {getPermissionLabel(perm)}
-            </span>
-          ))}
-          {value.length > 2 && (
-            <span className="px-2 py-1 text-xs text-muted">
-              +{value.length - 2} more
-            </span>
-          )}
-        </div>
-      ),
-    },
+      key: "isSystem",
+      label: "Type",
+      render: (val) => val ? (
+        <span className="text-blue-600 text-xs font-bold uppercase tracking-tight">System</span>
+      ) : (
+        <span className="text-amber-600 text-xs font-bold uppercase tracking-tight">Custom</span>
+      )
+    }
   ];
 
+  const roles = rolesData?.data || [];
+  const policies = policiesData?.data || [];
+
   return (
-    <div className="p-6">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h1>Roles</h1>
-        <Button size="sm" variant="primary" onClick={handleOpenCreateForm}>
-          + Create Role
-        </Button>
+    <div className="p-8 max-w-7xl mx-auto space-y-10">
+      <header>
+        <h1 className="text-4xl font-black text-gray-900 tracking-tight">Business Roles</h1>
+        <p className="text-gray-500 font-medium">Define custom roles like Junior Waiter and attach IAM security policies.</p>
+      </header>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* CREATE ROLE */}
+        <Card className="p-6 border-l-4 border-indigo-600 shadow-xl">
+          <h2 className="text-xl font-bold mb-6 flex items-center gap-3">
+            <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center font-bold">
+              +
+            </div>
+            Create New Role
+          </h2>
+          <form onSubmit={handleCreate} className="space-y-5">
+            <Input
+              label="Display Name"
+              placeholder="e.g. Senior Waiter"
+              value={newRole.name}
+              onChange={(e) => setNewRole({ ...newRole, name: e.target.value })}
+              required
+            />
+            <Input
+              label="System Code"
+              placeholder="e.g. SENIOR_WAITER"
+              value={newRole.code}
+              onChange={(e) => setNewRole({ ...newRole, code: e.target.value.toUpperCase() })}
+              required
+            />
+            <Button type="submit" variant="primary" className="w-full font-bold uppercase py-3 shadow-lg shadow-indigo-100">
+              Register Role
+            </Button>
+          </form>
+        </Card>
+
+        {/* ATTACH POLICY */}
+        <Card className="p-6 border-l-4 border-emerald-500 shadow-xl">
+          <h2 className="text-xl font-bold mb-6 flex items-center gap-3">
+            <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center font-bold">
+              🔒
+            </div>
+            Policy Assignment
+          </h2>
+          <form onSubmit={handleAttach} className="space-y-5">
+            <Select
+              label="Role Target"
+              options={roles.map((r: any) => ({ value: r._id, label: `${r.name} (${r.code})` }))}
+              value={assignment.roleId}
+              onChange={(e) => setAssignment({ ...assignment, roleId: e.target.value })}
+              required
+              placeholder="Select role to modify"
+            />
+            <Select
+              label="IAM Policy"
+              options={policies.map((p: any) => ({ value: p._id, label: p.name }))}
+              value={assignment.policyId}
+              onChange={(e) => setAssignment({ ...assignment, policyId: e.target.value })}
+              required
+              placeholder="Select security policy"
+            />
+            <Button type="submit" variant="secondary" className="w-full font-bold uppercase py-3 shadow-lg shadow-emerald-100">
+              Attach Security Layer
+            </Button>
+          </form>
+        </Card>
       </div>
 
-      {/* Table */}
-      <Table<RoleUI>
-        columns={columns}
-        data={roles}
-        loading={isLoading}
-        emptyMessage="No roles found"
-        actions={(role) => (
-          <div className="flex gap-2">
-            <Button
-              size="sm"
-              variant="outlinePrimary"
-              onClick={() => handleOpenEditForm(role)}
-              disabled={isUpdating || isDeleting}
-            >
-              Edit
-            </Button>
-            <Button
-              size="sm"
-              variant="outlineDanger"
-              onClick={() => handleOpenDeleteConfirm(role)}
-              disabled={isDeleting}
-            >
-              Delete
-            </Button>
-          </div>
-        )}
-      />
-
-      {/* Role Form Modal */}
-      <RoleFormModal
-        isOpen={isFormModalOpen}
-        onClose={() => setIsFormModalOpen(false)}
-        onSubmit={handleFormSubmit}
-        isLoading={isCreating || isUpdating}
-        role={selectedRole || undefined}
-      />
-
-      {/* Delete Confirmation Modal */}
-      <Modal
-        isOpen={isDeleteModalOpen}
-        onClose={() => {
-          setIsDeleteModalOpen(false);
-          setSelectedRole(null);
-        }}
-        header={<h2>Delete Role</h2>}
-        width="400px"
-      >
-        <div className="flex flex-col gap-4">
-          <p className="text-muted">
-            Are you sure you want to delete this role? This action cannot be undone.
-          </p>
-          <p className="text-heading font-semibold">{selectedRole?.name}</p>
-
-          <div className="flex justify-end gap-3 mt-6">
-            <Button
-              variant="outlineSecondary"
-              onClick={() => {
-                setIsDeleteModalOpen(false);
-                setSelectedRole(null);
-              }}
-              disabled={isDeleting}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="danger"
-              onClick={handleConfirmDelete}
-              disabled={isDeleting}
-            >
-              {isDeleting ? "Deleting..." : "Delete"}
-            </Button>
-          </div>
+      <Card className="p-0 overflow-hidden shadow-2xl border-none">
+        <div className="p-6 bg-gray-50 border-b">
+          <h2 className="text-xl font-bold text-gray-800">Role Inventory</h2>
         </div>
-      </Modal>
+        <Table
+          columns={columns}
+          data={roles}
+          loading={rolesLoading}
+          emptyMessage="No roles defined in system"
+        />
+      </Card>
     </div>
   );
 };
