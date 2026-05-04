@@ -65,23 +65,28 @@ const TenantRoles = () => {
     {
       key: "permissions",
       label: "Permissions",
-      render: (value: string[]) => (
-        <div className="flex flex-wrap gap-1">
-          {value.slice(0, 2).map((perm) => (
-            <span
-              key={perm}
-              className="px-2 py-1 rounded bg-[var(--color-green-100)] text-success text-xs"
-            >
-              {getPermissionLabel(perm)}
-            </span>
-          ))}
-          {value.length > 2 && (
-            <span className="px-2 py-1 text-xs text-muted">
-              +{value.length - 2} more
-            </span>
-          )}
-        </div>
-      ),
+      render: (value) => {
+        const permissions = (value ?? []) as string[];
+
+        return (
+          <div className="flex flex-wrap gap-1">
+            {permissions.slice(0, 2).map((perm) => (
+              <span
+                key={perm}
+                className="px-2 py-1 rounded bg-[var(--color-green-100)] text-success text-xs"
+              >
+                {getPermissionLabel(perm)}
+              </span>
+            ))}
+
+            {permissions.length > 2 && (
+              <span className="px-2 py-1 text-xs text-muted">
+                +{permissions.length - 2} more
+              </span>
+            )}
+          </div>
+        );
+      },
     },
   ];
 

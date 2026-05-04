@@ -1,5 +1,4 @@
 import { useLocation } from "react-router-dom";
-import { ROUTE_TITLES } from "@/app/config/Dashboard/routeTitles";
 import { useAppSelector } from "@/app/store/hook";
 import ContextSwitcher from "@/shared/components/ContextSwitcher/ContextSwitcher";
 import { getRoleConfig } from "@/app/config/getRoleConfig/getRoleConfig";
@@ -15,7 +14,9 @@ export default function AppBar() {
     .replace(/^\/superadmin/, "")
     .replace(/^\/app\/[^/]+/, "");
 
-  const title = roleConfig.titles[cleanPath] || "Dashboard";
+  const title =
+    roleConfig.titles[cleanPath as keyof typeof roleConfig.titles] ||
+    "Dashboard";
 
   return (
     <div className="border-b flex items-center p-3 justify-between">

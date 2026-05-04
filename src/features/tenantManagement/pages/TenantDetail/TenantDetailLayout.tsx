@@ -1,7 +1,7 @@
-import { Link, Outlet, useParams } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
 const TenantDetailLayout = () => {
-  const { tenantId } = useParams();
+  
 
   return (
     <div className="p-6">

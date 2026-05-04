@@ -32,7 +32,6 @@ const RoleFormModal = ({
     control,
     formState: { errors },
     reset,
-    watch,
   } = useForm<CreateRoleFormData | UpdateRoleFormData>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -42,7 +41,7 @@ const RoleFormModal = ({
     },
   });
 
-  const selectedPermissions = watch("permissions");
+
 
   const handleClose = () => {
     reset();

@@ -1,12 +1,12 @@
 
-import { useAppDispatch, useAppSelector } from "@/app/store/hook";
-import { useNavigate } from "react-router-dom";
+import {  useAppSelector } from "@/app/store/hook";
+
 import Select from "@/shared/components/UI/Select/Select"; 
-import { setActiveContext } from "@/features/auth/authSlice";
+
 
 const ContextSwitcher = () => {
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+
+  
 
   // 🔥 Updated to use the new 'tenants' and 'user' structure
   const { tenants, user, activeTenantId } = useAppSelector((state) => state.auth);

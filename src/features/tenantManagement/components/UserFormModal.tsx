@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import {  useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Modal from "@/shared/components/Modal/Modal";
@@ -35,7 +35,6 @@ const UserFormModal = ({
     handleSubmit,
     formState: { errors },
     reset,
-    setValue
   } = useForm<CreateUserFormData | UpdateUserFormData>({
     resolver: zodResolver(schema),
     defaultValues: {

@@ -15,11 +15,13 @@ export const createGlobalRoleSchema = z.object({
     .min(2, "System code must be at least 2 characters")
     .max(40, "System code must be less than 40 characters")
     .regex(/^[A-Z0-9_]+$/, "Code must be uppercase letters, numbers, or underscores only"),
-  category: z.enum(ROLE_CATEGORIES, {
-    errorMap: () => ({ message: "Please select a valid category" }),
-  }),
+  category:z.enum(ROLE_CATEGORIES, {
+  error: "Please select a valid category",
+}),
   level: z
-    .number({ invalid_type_error: "Level must be a number" })
+    .number({
+      error: "Level must be a number",
+    })
     .min(1, "Level must be at least 1")
     .max(999, "Level must be at most 999")
     .optional(),

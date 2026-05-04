@@ -1,9 +1,7 @@
-import { useDispatch, useSelector } from "react-redux";
-import { setActiveTenant } from "@/features/auth/authSlice";
+import {  useSelector } from "react-redux";
 import Select from "@/shared/components/UI/Select/Select";
 
 const TenantSwitcher = () => {
-  const dispatch = useDispatch();
   const { tenants, activeTenantId } = useSelector((state: any) => state.auth);
   
   const handleChange = (e: any) => {

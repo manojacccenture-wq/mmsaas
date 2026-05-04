@@ -18,7 +18,7 @@ const ListFilters: React.FC<Props> = ({
       <div className="flex items-center gap-2">
         <h5 className="font-semibold">
           {title}
-        </p>
+        </h5>
 
         {totalCount !== undefined && (
           <span className="text-muted text-sm">

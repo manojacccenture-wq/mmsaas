@@ -86,7 +86,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
           const isOpen = openMenu === item.id;
 
           // 🔥 CASE 1: Parent with children
-          if (item.children) {
+          if ("children" in item && item.children) {
             return (
               <div key={item.id}>
                 {/* Parent */}
