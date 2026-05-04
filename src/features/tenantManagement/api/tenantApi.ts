@@ -63,9 +63,17 @@ export const tenantApi = baseApi.injectEndpoints({
       query: (data: any) => post("/v1/api/roles")(data),
       invalidatesTags: ["TenantRole"],
     }),
+    deleteGlobalRole: builder.mutation({
+      query: (id: string) => ({ url: `/v1/api/roles/${id}`, method: "DELETE" }),
+      invalidatesTags: ["TenantRole"],
+    }),
     getIAMPolicies: builder.query({
       query: get("/v1/api/iam/policies"),
       providesTags: ["IAMPolicy" as any],
+    }),
+    createIAMPolicy: builder.mutation({
+      query: (data: any) => post("/v1/api/iam/policies")(data),
+      invalidatesTags: ["IAMPolicy" as any],
     }),
     attachPolicyToRole: builder.mutation({
       query: (data: { roleId: string; policyId: string }) => post("/v1/api/iam/policies/attach")(data),
@@ -87,6 +95,8 @@ export const {
   useDeleteRoleMutation,
   useGetGlobalRolesQuery,
   useCreateGlobalRoleMutation,
+  useDeleteGlobalRoleMutation,
   useGetIAMPoliciesQuery,
+  useCreateIAMPolicyMutation,
   useAttachPolicyToRoleMutation,
 } = tenantApi;

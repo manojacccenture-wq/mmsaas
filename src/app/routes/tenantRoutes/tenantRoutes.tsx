@@ -5,6 +5,7 @@ import Dashboard from "@/features/Dashboard/pages/Dashboard";
 import Logout from "@/features/auth/pages/Logout";
 import Users from "@/features/tenantManagement/pages/Users";
 import Roles from "@/features/tenantManagement/pages/Roles";
+import PolicyManagement from "@/features/policyManagement/pages/PolicyManagement";
 
 const TenantRoutes = () => {
   return (
@@ -21,13 +22,15 @@ const TenantRoutes = () => {
 
         {/* matches /app/:tenantId/dashboard */}
         <Route path="dashboard" element={<Dashboard />} />
-        
+
         {/* matches /app/:tenantId/users */}
         <Route path="users" element={<Users />} />
 
         {/* matches /app/:tenantId/roles */}
         <Route path="roles" element={<Roles />} />
-        
+
+        <Route path="policy" element={<PolicyManagement />} />
+
         <Route path="logout" element={<Logout />} />
       </Route>
     </Routes>

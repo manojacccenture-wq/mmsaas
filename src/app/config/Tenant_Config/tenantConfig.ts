@@ -4,7 +4,7 @@
 export const tenantConfig = {
   basePath: "/app/:tenantId",
 
- menu: [
+  menu: [
     { id: "dashboard", label: "Overview", path: "" },
 
     {
@@ -13,6 +13,7 @@ export const tenantConfig = {
       children: [
         { id: "users", label: "Users", path: "/users" },
         { id: "roles", label: "Roles", path: "/roles" },
+        { id: "policy", label: "Policy Management", path: "/policy" },
       ]
     },
 
