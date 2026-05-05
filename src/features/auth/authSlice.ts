@@ -34,7 +34,7 @@ const initialState: AuthState = {
   otpType: null,
   loading: true,
   tenants: [],
-  activeTenantId: localStorage.getItem("activeTenantId"), // Initialize from storage
+  activeTenantId: null,
   activeContext: null,
   sessionRestored: false,
 };
@@ -54,20 +54,10 @@ const authSlice = createSlice({
     },
     setActiveTenant: (state, action) => {
       state.activeTenantId = action.payload;
-      if (action.payload) {
-        localStorage.setItem("activeTenantId", action.payload);
-      } else {
-        localStorage.removeItem("activeTenantId");
-      }
     },
     setActiveContext: (state, action) => {
       state.activeContext = action.payload;
       state.activeTenantId = action.payload?.tenantId || null;
-      if (state.activeTenantId) {
-        localStorage.setItem("activeTenantId", state.activeTenantId);
-      } else {
-        localStorage.removeItem("activeTenantId");
-      }
     }
   },
   extraReducers: (builder) => {
@@ -172,7 +162,6 @@ const authSlice = createSlice({
         state.tenants = [];
         state.activeContext = null;
         state.activeTenantId = null;
-        localStorage.removeItem("activeTenantId"); // 🔥 Clear storage on logout
         state.sessionRestored = false;
         state.status = 'idle';
         state.isAuthenticated = false;
@@ -240,13 +229,6 @@ const authSlice = createSlice({
         state.tenants = action.payload.tenants || [];
         state.activeContext = action.payload.activeContext || null;
         state.activeTenantId = action.payload.activeContext?.tenantId || null;
-
-        // 🔥 Sync localStorage for API header injection
-        if (state.activeTenantId) {
-          localStorage.setItem("activeTenantId", state.activeTenantId);
-        } else {
-          localStorage.removeItem("activeTenantId"); // Ensure it's cleared for Global access
-        }
       })
       .addCase(restoreSessionAsync.rejected, (state) => {
         state.loading = false;
@@ -255,7 +237,6 @@ const authSlice = createSlice({
         state.tenants = [];
         state.activeContext = null;
         state.activeTenantId = null;
-        localStorage.removeItem("activeTenantId");
       });
 
 

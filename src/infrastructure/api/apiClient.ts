@@ -23,12 +23,27 @@ const apiClient = axios.create({
   },
 });
 
-// 🔥 Automatically inject x-tenant-id from localStorage
+// 🔥 Automatically inject headers based on the current URL route (Stateless & Secure)
 apiClient.interceptors.request.use((config) => {
-  const activeTenantId = localStorage.getItem("activeTenantId");
-  if (activeTenantId && activeTenantId !== "null") {
-    config.headers["x-tenant-id"] = activeTenantId;
+  // Extract tenantId (ObjectId) and productId (string) from URL: /app/:tenantId/:productId
+  const match = window.location.pathname.match(/^\/app\/([a-fA-F0-9]{24})(?:\/([a-zA-Z0-9_-]+))?/);
+  
+  
+  if (match) {
+    const tenantId = match[1];
+    
+    const productId = match[2]; // e.g. "crm", "pos"
+    
+
+    if (tenantId) {
+      config.headers["x-tenant-id"] = tenantId;
+    }
+    if (productId && productId !== "dashboard" && productId !== "settings" && productId !== "policy" && productId !== "users" && productId !== "roles") {
+      // Pass product code if it's not a generic tenant-level route
+      config.headers["x-product-id"] = productId; 
+    }
   }
+
   return config;
 });
 

@@ -95,40 +95,43 @@ const CreateTenant = () => {
           )}
         />
 
-        {/* Password */}
-        {/* <Input
-          type="password"
-          label="Password"
-          placeholder="Enter password"
-          showPasswordToggle
-          {...register("password")}
-          error={!!errors.password}
-          helperText={errors.password?.message}
-        /> */}
-
-        {/* Role */}
-        {/* <Select
-          label="Role"
-          {...register("roleId")}
-          error={!!errors.roleId}
-          helperText={errors.roleId?.message}
-          options={[
-            {
-              label: "Tenant Admin",
-              value: "69d4cfd5b6dd5c5d1d097537",
-            },
-            {
-              label: "Manager",
-              value: "role_manager_id",
-            },
-          ]}
-        /> */}
-
+        {/* Assigned Products */}
+        <div className="flex flex-col gap-2 mt-2">
+          <label className="text-sm font-semibold text-gray-700">Assign Products</label>
+          <Controller
+            name="products"
+            control={control}
+            defaultValue={["ANAS_KITCHEN"]}
+            render={({ field }) => (
+              <div className="flex flex-col gap-3">
+                <label className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                  <input
+                    type="checkbox"
+                    className="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500"
+                    checked={field.value?.includes("ANAS_KITCHEN")}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        field.onChange([...(field.value || []), "ANAS_KITCHEN"]);
+                      } else {
+                        field.onChange((field.value || []).filter((v: string) => v !== "ANAS_KITCHEN"));
+                      }
+                    }}
+                  />
+                  <div>
+                    <p className="font-semibold text-gray-800">Anas Kitchen App</p>
+                    <p className="text-xs text-gray-500">Core restaurant management application</p>
+                  </div>
+                </label>
+                {errors.products && <p className="text-xs text-red-500">{errors.products.message}</p>}
+              </div>
+            )}
+          />
+        </div>
         {/* Actions */}
-        <div className="flex gap-64 mt-4">
+        <div className="flex justify-end gap-4 mt-6 pt-4 border-t border-gray-100">
           <Button
             type="button"
-            variant="danger"
+            variant="outlineSecondary"
             onClick={() => navigate(-1)}
           >
             Cancel

@@ -71,14 +71,7 @@ const AppRouter = () => {
 
 
 
-        <Route
-          path="/dashboard"
-          element={
-            <RouteGuard requireAuth>
-              <AuthRedirect />
-            </RouteGuard>
-          }
-        />
+        <Route path="/dashboard" element={<RouteGuard requireAuth><AuthRedirect /></RouteGuard>}/>
 
         <Route path="/superadmin/*" element={<SuperAdminRoutes />} />
         <Route path="/app/:tenantId/*" element={<TenantRoutes />} />

@@ -8,7 +8,7 @@ import Input from "@/shared/components/UI/Input/Input";
 import Button from "@/shared/components/UI/Button/Button";
 
 import { signInSchema, type SignInSchemaType } from "@/features/auth/schemas/auth.schema";
-import { loginAsync } from "@/features/auth/authThunk";
+import { loginAsync, restoreSessionAsync } from "@/features/auth/authThunk";
 import { clearError } from "@/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/app/store/hook";
 
@@ -49,21 +49,26 @@ const SignIn: React.FC = () => {
       return;
     }
 
+    console.log('isAuthenticated: ', isAuthenticated)
     if (isAuthenticated) {
       navigate("/dashboard");
     }
   }, [mfaPending, isAuthenticated, otpType, navigate]);
 
 
-
   const onSubmit: SubmitHandler<SignInSchemaType> = async (data) => {
     dispatch(clearError());
 
     try {
-      await dispatch(loginAsync(data)).unwrap();
+      const result = await dispatch(loginAsync(data)).unwrap();
+      console.log('result: ', result)
+      // If no MFA required, fetch session data immediately
+      console.log('!result?.emailOtpRequired && !result?.mfaRequired: ', !result?.emailOtpRequired && !result?.mfaRequired)
+      if (!result?.emailOtpRequired && !result?.mfaRequired) {
+        await dispatch(restoreSessionAsync()).unwrap();
+      }
     } catch { /* empty */ }
   };
-
   const handleNavigateForgotPassword = (): void => {
     navigate("/forgotPassword");
   };

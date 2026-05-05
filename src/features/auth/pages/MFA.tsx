@@ -10,7 +10,7 @@ import Input from "@/shared/components/UI/Input/Input";
 import Button from "@/shared/components/UI/Button/Button";
 
 import { clearError } from "@/features/auth/authSlice";
-import { verifyMfaAsync } from "@/features/auth/authThunk";
+import { verifyMfaAsync, restoreSessionAsync } from "@/features/auth/authThunk";
 import { useAppDispatch, useAppSelector } from "@/app/store/hook";
 import Modal from "@/shared/components/Modal/Modal";
 
@@ -105,9 +105,12 @@ const MFA: React.FC = () => {
         token: data.otp,
       })
     ).unwrap();
+    
+    console.log('result: ', result)
+    // Fetch session data before navigating
+    await dispatch(restoreSessionAsync()).unwrap();
 
     // 🎯 CONTROL FLOW HERE (no useEffect needed)
-
     if (result.isFirstTimeLogin) {
       setShowSetupModal(true);
     } else {

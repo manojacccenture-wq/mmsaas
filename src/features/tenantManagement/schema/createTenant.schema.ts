@@ -13,7 +13,9 @@ export const createTenantSchema = z.object({
     .string()
     .min(8, "Password must be at least 8 characters"),
 
-  // roleId: z.string().min(1, "Role is required"),
+  products: z
+    .array(z.string())
+    .min(1, "At least one product is required"),
 });
 
 export type CreateTenantFormData = z.infer<typeof createTenantSchema>;

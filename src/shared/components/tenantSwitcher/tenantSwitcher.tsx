@@ -1,17 +1,22 @@
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useNavigate, useLocation } from "react-router-dom";
 import Select from "@/shared/components/UI/Select/Select";
 
 const TenantSwitcher = () => {
-  const { tenants, activeTenantId } = useSelector((state: any) => state.auth);
-  
+  const { tenants } = useSelector((state: any) => state.auth);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Extract active tenant from URL instead of state/localStorage
+  const match = location.pathname.match(/^\/app\/([a-fA-F0-9]{24})/);
+  const activeTenantId = match ? match[1] : "";
+
   const handleChange = (e: any) => {
     const newTenantId = e.target.value;
     if (newTenantId) {
-      localStorage.setItem("activeTenantId", newTenantId);
-      window.location.href = `/app/${newTenantId}/dashboard`;
+      navigate(`/app/${newTenantId}/dashboard`);
     } else {
-      localStorage.removeItem("activeTenantId");
-      window.location.href = "/superadmin";
+      navigate("/superadmin");
     }
   };
 
@@ -26,7 +31,7 @@ const TenantSwitcher = () => {
     <div className="flex items-center gap-2 p-1">
       <Select
         options={options}
-        value={activeTenantId || ""}
+        value={activeTenantId}
         size="sm"
         onChange={handleChange}
         placeholder="Global / System"
