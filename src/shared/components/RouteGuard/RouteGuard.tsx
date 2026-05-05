@@ -26,7 +26,7 @@ const RouteGuard = ({
   const dispatch = useAppDispatch();
 
   // Get auth state from Redux
-const { isAuthenticated, mfaPending, user, firstTimeLogin, otpType } =useAppSelector((state) => state.auth);
+  const { isAuthenticated, mfaPending, user, firstTimeLogin, otpType, activeContext } = useAppSelector((state) => state.auth);
 
   const role = user?.Role?.toLowerCase();
 
@@ -62,6 +62,23 @@ if (requirePublic && isAuthenticated && !mfaPending && !firstTimeLogin) {
 
     if (user?.Role?.toLowerCase() === "operator") {
       return <Navigate to="/access-denied" replace />;
+    }
+
+    // 🔥 STRICT CONTEXT vs URL MATCHING (Tenant / SuperAdmin Gate)
+    const urlMatch = location.pathname.match(/^\/app\/([a-fA-F0-9]{24})/);
+    console.log('urlMatch: ', urlMatch)
+    const urlTenantId = urlMatch ? urlMatch[1] : null;
+
+    if (urlTenantId) {
+      // Trying to access a specific tenant workspace
+      if (!activeContext || activeContext.tenantId !== urlTenantId) {
+        return <Navigate to="/dashboard" replace />; // Fallback to auto-router
+      }
+    } else if (location.pathname.startsWith("/superadmin")) {
+      // Trying to access global super admin workspace
+      if (!activeContext || !activeContext.isSuperAdmin || activeContext.tenantId !== null) {
+        return <Navigate to="/dashboard" replace />; // Fallback to auto-router
+      }
     }
   }
 

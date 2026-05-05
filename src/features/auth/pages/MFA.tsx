@@ -108,13 +108,26 @@ const MFA: React.FC = () => {
     
     console.log('result: ', result)
     // Fetch session data before navigating
-    await dispatch(restoreSessionAsync()).unwrap();
+    const sessionPayload = await dispatch(restoreSessionAsync()).unwrap();
+    console.log('sessionPayload: ', sessionPayload)
 
     // 🎯 CONTROL FLOW HERE (no useEffect needed)
     if (result.isFirstTimeLogin) {
       setShowSetupModal(true);
     } else {
-      navigate("/dashboard");
+      const isGlobalAdmin = sessionPayload.activeContext?.isSuperAdmin;
+      const activeTenantId = sessionPayload.activeContext?.tenantId;
+      const firstTenantId = sessionPayload.tenants?.[0]?.tenantId;
+
+      if (activeTenantId) {
+        navigate(`/app/${activeTenantId}`, { replace: true });
+      } else if (isGlobalAdmin) {
+        navigate("/superadmin", { replace: true });
+      } else if (firstTenantId) {
+        navigate(`/app/${firstTenantId}`, { replace: true });
+      } else {
+        navigate("/access-denied", { replace: true });
+      }
     }
 
   } catch (err) {
