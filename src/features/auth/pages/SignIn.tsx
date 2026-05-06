@@ -49,7 +49,7 @@ const SignIn: React.FC = () => {
       return;
     }
 
-    console.log('isAuthenticated: ', isAuthenticated)
+    
     if (isAuthenticated) {
       navigate("/dashboard");
     }
@@ -61,9 +61,9 @@ const SignIn: React.FC = () => {
 
     try {
       const result = await dispatch(loginAsync(data)).unwrap();
-      console.log('result: ', result)
+      
       // If no MFA required, fetch session data immediately
-      console.log('!result?.emailOtpRequired && !result?.mfaRequired: ', !result?.emailOtpRequired && !result?.mfaRequired)
+      
       if (!result?.emailOtpRequired && !result?.mfaRequired) {
         await dispatch(restoreSessionAsync()).unwrap();
       }

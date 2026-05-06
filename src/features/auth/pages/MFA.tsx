@@ -106,10 +106,10 @@ const MFA: React.FC = () => {
       })
     ).unwrap();
     
-    console.log('result: ', result)
+    
     // Fetch session data before navigating
     const sessionPayload = await dispatch(restoreSessionAsync()).unwrap();
-    console.log('sessionPayload: ', sessionPayload)
+    
 
     // 🎯 CONTROL FLOW HERE (no useEffect needed)
     if (result.isFirstTimeLogin) {

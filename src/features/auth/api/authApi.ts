@@ -8,6 +8,7 @@ import type { LoginRequest } from "@/features/auth/api/auth.types";
 const API_ENDPOINTS = {
   LOGIN: "v1/api/auth/login",
   ME: "v1/api/auth/me",
+  MENU: "v1/api/auth/menu",
   REGISTER: "register",
   VERIFY_MFA: "v1/api/auth/verify-login-mfa",
   ENABLE_MFA: "v1/api/auth/enable-mfa",
@@ -100,7 +101,11 @@ const authService = {
     return apiClient.get(API_ENDPOINTS.ME);
   },
 
-    refreshMe: () => {
+  getSidebarMenu: () => {
+    return apiClient.get(API_ENDPOINTS.MENU);
+  },
+
+  refreshMe: () => {
     return apiClient.post(API_ENDPOINTS.REFRESH);
   },
 };

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import authService from "@/features/auth/api/authApi";
 import { SIDEBAR_ICONS } from "@/app/config/Dashboard/sidebarIcons/SidebarIcons";
 
 import { useLocation, useNavigate } from "react-router-dom";
@@ -22,15 +23,45 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
 
   const roleConfig = getRoleConfig(activeContext);
 
-
-
   const basePath =
     roleConfig.basePath === "/superadmin"
       ? "/superadmin"
       : `/app/${activeContext?.tenantId}`;
 
-  //  Build menu
-  const menuWithPath = roleConfig.menu?.map((item) => ({
+  const match = location.pathname.match(/^\/app\/([a-fA-F0-9]{24})(?:\/([a-zA-Z0-9_-]+))?/);
+  const activeProductId = match ? match[2] : null;
+
+  const [sidebarMenu, setSidebarMenu] = useState<any[]>([]);
+  const [isLoadingMenu, setIsLoadingMenu] = useState<boolean>(true);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchMenu = async () => {
+      setIsLoadingMenu(true);
+      try {
+        const { data } = await authService.getSidebarMenu();
+        if (isMounted && data.menu) {
+          setSidebarMenu(data.menu);
+        }
+      } catch (error) {
+        console.error("Failed to fetch sidebar menu:", error);
+      } finally {
+        if (isMounted) {
+          setIsLoadingMenu(false);
+        }
+      }
+    };
+
+    fetchMenu();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [activeContext?.tenantId, activeContext?.isSuperAdmin, activeProductId]); // Refetch when context or product changes
+
+  //  Build menu paths
+  const menuWithPath = sidebarMenu.map((item: any) => ({
     ...item,
     fullPath:
       item.path === "/logout"
@@ -38,15 +69,8 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
         : `${basePath}${item.path}`,
   }));
 
-
-
-
-  // 🔥 Permission filter
-  const filteredMenu = menuWithPath.filter((/* item */) =>
-
-    true
-    // hasPermission(user?.Role, item.permission)
-  );
+  // Backend already filters by permission — no client-side filter needed
+  const filteredMenu = menuWithPath || [];
 
   return (
     <aside
@@ -81,8 +105,12 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
 
       {/* Menu */}
       <div className="space-y-2">
-
-        {filteredMenu.map((item) => {
+        {isLoadingMenu ? (
+          <div className="flex justify-center items-center h-20">
+            <span className="text-sm text-gray-400">Loading menu...</span>
+          </div>
+        ) : (
+          filteredMenu.map((item) => {
           const isOpen = openMenu === item.id;
 
           // 🔥 CASE 1: Parent with children
@@ -157,7 +185,8 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
               )}
             </div>
           );
-        })}
+        })
+        )}
       </div>
     </aside>
   );

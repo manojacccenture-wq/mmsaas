@@ -1,5 +1,7 @@
 import axios from "axios";
 
+
+
 type FailedRequest = {
   resolve: (value?: unknown) => void;
   reject: (reason?: any) => void;
@@ -23,24 +25,31 @@ const apiClient = axios.create({
   },
 });
 
-// 🔥 Automatically inject headers based on the current URL route (Stateless & Secure)
+let store: any;
+
+export const injectStore = (_store: any) => {
+  store = _store;
+};
+
+// 🔥 Automatically inject headers based on Redux state
 apiClient.interceptors.request.use((config) => {
-  // Extract tenantId (ObjectId) and productId (string) from URL: /app/:tenantId/:productId
-  const match = window.location.pathname.match(/^\/app\/([a-fA-F0-9]{24})(?:\/([a-zA-Z0-9_-]+))?/);
-  
-  
-  if (match) {
-    const tenantId = match[1];
+  if (store) {
+    const state = store.getState();
+    const tenantId = state.auth.activeTenantId;
+    const productId = state.auth.activeProductId;
     
-    const productId = match[2]; // e.g. "crm", "pos"
-    
+    const roleId = state.auth.activeRole;
 
     if (tenantId) {
       config.headers["x-tenant-id"] = tenantId;
     }
-    if (productId && productId !== "dashboard" && productId !== "settings" && productId !== "policy" && productId !== "users" && productId !== "roles") {
-      // Pass product code if it's not a generic tenant-level route
-      config.headers["x-product-id"] = productId; 
+    
+    if (productId) {
+      config.headers["x-product-id"] = productId;
+    }
+
+    if (roleId) {
+      config.headers["x-role"] = roleId;
     }
   }
 

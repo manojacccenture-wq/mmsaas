@@ -6,7 +6,7 @@ interface TempCredentials {
   password: string;
 }
 interface AuthState {
-  user: any | null; 
+  user: any | null;
   isAuthenticated: boolean;
   mfaPending: boolean;
   firstTimeLogin: boolean;
@@ -18,6 +18,8 @@ interface AuthState {
   loading: Boolean;
   tenants: any[]; // Updated from contexts
   activeTenantId: string | null;
+  activeProductId: string | null;
+  activeRole: string | null;
   activeContext: any | null;
   sessionRestored: boolean;
 }
@@ -35,6 +37,8 @@ const initialState: AuthState = {
   loading: true,
   tenants: [],
   activeTenantId: null,
+  activeProductId: null,
+  activeRole: localStorage.getItem("activeRole") || null,
   activeContext: null,
   sessionRestored: false,
 };
@@ -58,6 +62,17 @@ const authSlice = createSlice({
     setActiveContext: (state, action) => {
       state.activeContext = action.payload;
       state.activeTenantId = action.payload?.tenantId || null;
+    },
+    setActiveProduct: (state, action) => {
+      state.activeProductId = action.payload;
+    },
+    setActiveRole: (state, action) => {
+      state.activeRole = action.payload;
+      if (action.payload) {
+        localStorage.setItem("activeRole", action.payload);
+      } else {
+        localStorage.removeItem("activeRole");
+      }
     }
   },
   extraReducers: (builder) => {
@@ -138,8 +153,8 @@ const authSlice = createSlice({
         state.status = "succeeded";
         // Backend returns: { msg, isFirstTimeLogin, isSuperAdmin }
         // We set basic user info; full context will be fetched by restoreSession or next /me call
-        state.user = { 
-          isSuperAdmin: action.payload.isSuperAdmin 
+        state.user = {
+          isSuperAdmin: action.payload.isSuperAdmin
         };
         state.mfaPending = false;
         state.isAuthenticated = true;
@@ -216,6 +231,7 @@ const authSlice = createSlice({
         state.loading = true;
       })
       .addCase(restoreSessionAsync.fulfilled, (state, action: any) => {
+        console.log('action: ', action)
         state.loading = false;
         state.isAuthenticated = true;
         state.sessionRestored = true;
@@ -226,9 +242,11 @@ const authSlice = createSlice({
           email: action.payload.email
         };
 
-        state.tenants = action.payload.tenants || [];
+        state.tenants = action.payload.memberships || [];
         state.activeContext = action.payload.activeContext || null;
         state.activeTenantId = action.payload.activeContext?.tenantId || null;
+        state.activeProductId = action.payload.activeContext?.products[0]?.code || null;
+
       })
       .addCase(restoreSessionAsync.rejected, (state) => {
         state.loading = false;
@@ -237,11 +255,12 @@ const authSlice = createSlice({
         state.tenants = [];
         state.activeContext = null;
         state.activeTenantId = null;
+        state.activeRole = null;
       });
 
 
   },
 });
 
-export const { clearError, setMfaPending, clearMfaPending, setActiveTenant, setActiveContext } = authSlice.actions;
+export const { clearError, setMfaPending, clearMfaPending, setActiveTenant, setActiveContext, setActiveProduct, setActiveRole } = authSlice.actions;
 export default authSlice.reducer;

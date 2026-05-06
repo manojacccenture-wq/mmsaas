@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from '@/app/store/rootReducer';
 import { baseApi } from '@/app/store/api/baseApi';
-
+import { injectStore } from '@/infrastructure/api/apiClient';
 
 export const store = configureStore({
   reducer: rootReducer,
@@ -13,6 +13,8 @@ export const store = configureStore({
       },
     }).concat(baseApi.middleware),
 });
+
+injectStore(store);
 
 
 //  Correct RootState type

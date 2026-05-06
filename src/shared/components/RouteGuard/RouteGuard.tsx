@@ -1,8 +1,10 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useRef, type ReactNode } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/store/hook';
+import { useEffect } from 'react';
 
 import { logoutAsync } from '@/features/auth/authThunk';
+import { setActiveTenant, setActiveProduct } from '@/features/auth/authSlice';
 // import { hasPermission } from '../../../utils/permissionUtils/permissionUtils';
 
 
@@ -24,6 +26,23 @@ const RouteGuard = ({
 }: RouteGuardProps) => {
   const location = useLocation();
   const dispatch = useAppDispatch();
+
+  // Sync URL params to Redux so apiClient can reliably read from Redux
+  // useEffect(() => {
+  //   const match = location.pathname.match(/^\/app\/([a-fA-F0-9]{24})(?:\/([a-zA-Z0-9_-]+))?/);
+  //   if (match) {
+  //     const tenantId = match[1];
+  //     const productId = match[2];
+      
+  //     dispatch(setActiveTenant(tenantId));
+      
+  //     if (productId && !['dashboard', 'settings', 'policy', 'users', 'roles'].includes(productId)) {
+  //       dispatch(setActiveProduct(productId));
+  //     } else {
+  //       dispatch(setActiveProduct(null));
+  //     }
+  //   }
+  // }, [location.pathname, dispatch]);
 
   // Get auth state from Redux
   const { isAuthenticated, mfaPending, user, firstTimeLogin, otpType, activeContext } = useAppSelector((state) => state.auth);
@@ -66,7 +85,7 @@ if (requirePublic && isAuthenticated && !mfaPending && !firstTimeLogin) {
 
     // 🔥 STRICT CONTEXT vs URL MATCHING (Tenant / SuperAdmin Gate)
     const urlMatch = location.pathname.match(/^\/app\/([a-fA-F0-9]{24})/);
-    console.log('urlMatch: ', urlMatch)
+    
     const urlTenantId = urlMatch ? urlMatch[1] : null;
 
     if (urlTenantId) {
