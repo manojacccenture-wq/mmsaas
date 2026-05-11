@@ -17,6 +17,7 @@ const API_ENDPOINTS = {
   FORGOT_PASSWORD: "v1/api/Account/ForgotPassword",
   RESET_PASSWORD: "v1/api/Account/CustomResetPassword",
   REFRESH: "v1/api/auth/refresh",
+  DEMO_REQUEST: "v1/api/demo-request/demo-request",
 };
 
 
@@ -107,6 +108,17 @@ const authService = {
 
   refreshMe: () => {
     return apiClient.post(API_ENDPOINTS.REFRESH);
+  },
+
+  submitDemoRequest: (data: {
+    firstName: string;
+    lastName: string;
+    workEmail: string;
+    companyName: string;
+    phoneNumber?: string;
+    useCase: string;
+  }) => {
+    return apiClient.post(API_ENDPOINTS.DEMO_REQUEST, data);
   },
 };
 

@@ -7,6 +7,7 @@ import AuthLayout from "@/app/layout";
 import { useAppSelector } from "../store/hook";
 import SuperAdminRoutes from "@/app/routes/Super_Admin_Routes/superAdminRoutes";
 import TenantRoutes from "@/app/routes/tenantRoutes/tenantRoutes";
+import DemoRequest from "@/features/auth/pages/DemoRequest";
 
 // Auth Pages
 const SignIn = lazy(() => import("@/features/auth/pages/SignIn"));
@@ -58,6 +59,8 @@ const AppRouter = () => {
         <Route path="/reset_Flow" element={<RouteGuard requireAuth requireResetState><PasswordReset /></RouteGuard>}
         />
 
+        <Route path="/demo" element={<RouteGuard requirePublic><DemoRequest /></RouteGuard>} />
+
         {/* MFA */}
 
         <Route path="/verify-email-otp" element={<RouteGuard requireMfa> <MFA /></RouteGuard>} />
@@ -71,7 +74,7 @@ const AppRouter = () => {
 
 
 
-        <Route path="/dashboard" element={<RouteGuard requireAuth><AuthRedirect /></RouteGuard>}/>
+        <Route path="/dashboard" element={<RouteGuard requireAuth><AuthRedirect /></RouteGuard>} />
 
         <Route path="/superadmin/*" element={<SuperAdminRoutes />} />
         <Route path="/app/:tenantId/*" element={<TenantRoutes />} />

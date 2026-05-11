@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import authService from "@/features/auth/api/authApi";
+import { useState } from "react";
 import { SIDEBAR_ICONS } from "@/app/config/Dashboard/sidebarIcons/SidebarIcons";
 
 import { useLocation, useNavigate } from "react-router-dom";
@@ -19,8 +18,6 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const { activeContext } = useAppSelector((state) => state.auth);
 
-
-
   const roleConfig = getRoleConfig(activeContext);
 
   const basePath =
@@ -31,34 +28,8 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
   const match = location.pathname.match(/^\/app\/([a-fA-F0-9]{24})(?:\/([a-zA-Z0-9_-]+))?/);
   const activeProductId = match ? match[2] : null;
 
-  const [sidebarMenu, setSidebarMenu] = useState<any[]>([]);
-  const [isLoadingMenu, setIsLoadingMenu] = useState<boolean>(true);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchMenu = async () => {
-      setIsLoadingMenu(true);
-      try {
-        const { data } = await authService.getSidebarMenu();
-        if (isMounted && data.menu) {
-          setSidebarMenu(data.menu);
-        }
-      } catch (error) {
-        console.error("Failed to fetch sidebar menu:", error);
-      } finally {
-        if (isMounted) {
-          setIsLoadingMenu(false);
-        }
-      }
-    };
-
-    fetchMenu();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [activeContext?.tenantId, activeContext?.isSuperAdmin, activeProductId]); // Refetch when context or product changes
+  // Grab the static menu directly from the config instead of fetching from backend
+  const sidebarMenu = roleConfig.menu || [];
 
   //  Build menu paths
   const menuWithPath = sidebarMenu.map((item: any) => ({
@@ -69,7 +40,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
         : `${basePath}${item.path}`,
   }));
 
-  // Backend already filters by permission — no client-side filter needed
+  // No client-side filter needed for now based on your static configs
   const filteredMenu = menuWithPath || [];
 
   return (
@@ -105,12 +76,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
 
       {/* Menu */}
       <div className="space-y-2">
-        {isLoadingMenu ? (
-          <div className="flex justify-center items-center h-20">
-            <span className="text-sm text-gray-400">Loading menu...</span>
-          </div>
-        ) : (
-          filteredMenu.map((item) => {
+        {filteredMenu.map((item) => {
           const isOpen = openMenu === item.id;
 
           // 🔥 CASE 1: Parent with children
@@ -136,7 +102,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
                 {/* Children */}
                 {isOpen && !collapsed && (
                   <div className="ml-8 mt-1 space-y-1">
-                    {item.children.map((child) => {
+                    {item.children.map((child: any) => {
                       const fullPath = `${basePath}${child.path}`;
 
                       return (
@@ -185,8 +151,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
               )}
             </div>
           );
-        })
-        )}
+        })}
       </div>
     </aside>
   );

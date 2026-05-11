@@ -46,6 +46,8 @@ const Modal: React.FC<ModalProps> = ({
     }
   };
 
+  if (!isOpen) return null;
+
   return (
     <div
       className="fixed inset-0 bg-gray-100/85 flex items-center justify-center z-50"

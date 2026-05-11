@@ -49,7 +49,7 @@ const SignIn: React.FC = () => {
       return;
     }
 
-    
+
     if (isAuthenticated) {
       navigate("/dashboard");
     }
@@ -61,9 +61,10 @@ const SignIn: React.FC = () => {
 
     try {
       const result = await dispatch(loginAsync(data)).unwrap();
-      
+      console.log('result: ', result)
+
       // If no MFA required, fetch session data immediately
-      
+
       if (!result?.emailOtpRequired && !result?.mfaRequired) {
         await dispatch(restoreSessionAsync()).unwrap();
       }
@@ -71,6 +72,10 @@ const SignIn: React.FC = () => {
   };
   const handleNavigateForgotPassword = (): void => {
     navigate("/forgotPassword");
+  };
+
+  const handleNavigateDemo = (): void => {
+    navigate("/demo"); // Or whatever your demo route is
   };
 
   return (
@@ -134,7 +139,6 @@ const SignIn: React.FC = () => {
               />
             </div> */}
           </div>
-
           <div className="flex flex-col gap-3">
             <Button
               type="submit"
@@ -144,6 +148,18 @@ const SignIn: React.FC = () => {
               className="w-full"
             >
               {isLoading ? "Signing In..." : "Sign In"}
+            </Button>
+
+            {/* New Demo Button */}
+            <Button
+              type="button"
+              variant="outlinePrimary" // or "secondary" depending on your UI library
+              size="md"
+              className="w-full"
+              onClick={handleNavigateDemo}
+              disabled={isLoading}
+            >
+              Wanna try free demo?
             </Button>
 
             <p className="font-normal text-body text-center text-sm sm:text-base">
