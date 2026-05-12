@@ -17,14 +17,6 @@ export const tenantConfig = {
       ]
     },
 
-    // {
-    //   id: "survey",
-    //   label: "Survey",
-    //   children: [
-    //     { id: "surveyList", label: "Survey List", path: "/surveyList" },
-    //   ]
-    // },
-
     { id: "logout", label: "Logout", path: "/logout" }
   ],
   // icons: SIDEBAR_ICONS,

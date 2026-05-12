@@ -30,6 +30,7 @@ const MFA: React.FC = () => {
   const [timer, setTimer] = useState<number>(60);
 
   const [showSetupModal, setShowSetupModal] = useState(false);
+  console.log('showSetupModal: ', showSetupModal)
   
 
   const {
@@ -97,7 +98,7 @@ const MFA: React.FC = () => {
   //   }
   // };
 
-  console.log("MFA Component Rendered. showSetupModal is:", showSetupModal);
+  
 
   const onSubmit: SubmitHandler<MfaSchemaType> = async (data) => {
   dispatch(clearError());
@@ -108,25 +109,28 @@ const MFA: React.FC = () => {
         token: data.otp,
       })
     ).unwrap();
+    console.log('result: ', result)
+    
     
     
     // Fetch session data before navigating
     const sessionPayload = await dispatch(restoreSessionAsync()).unwrap();
-    console.log('sessionPayload: ', sessionPayload)
+    
     
 
     // 🎯 CONTROL FLOW HERE (no useEffect needed)
-    console.log('result.isFirstTimeLogin: ', result.isFirstTimeLogin)
+    
+    console.log('result: ', result)
     if (result.isFirstTimeLogin) {
       setShowSetupModal(true);
       return
     } else {
       const isGlobalAdmin = sessionPayload.activeContext?.isSuperAdmin;
-      console.log('isGlobalAdmin: ', isGlobalAdmin)
+      
       const activeTenantId = sessionPayload.activeContext?.tenantId;
-      console.log('activeTenantId: ', activeTenantId)
+      
       const firstTenantId = sessionPayload.tenants?.[0]?.tenantId;
-      console.log('firstTenantId: ', firstTenantId)
+      
 
       if (activeTenantId) {
         navigate(`/app/${activeTenantId}`, { replace: true });
@@ -140,7 +144,7 @@ const MFA: React.FC = () => {
     }
 
   } catch (err) {
-    console.log('err: ', err)
+    
     // handled already
   }
 };

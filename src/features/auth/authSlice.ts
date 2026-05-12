@@ -251,6 +251,7 @@ const authSlice = createSlice({
       .addCase(restoreSessionAsync.rejected, (state) => {
         state.loading = false;
         state.isAuthenticated = false;
+        state.sessionRestored = true;
         state.user = null;
         state.tenants = [];
         state.activeContext = null;

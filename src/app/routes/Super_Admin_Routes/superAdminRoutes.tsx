@@ -9,7 +9,8 @@ import TenantOverview from "@/features/tenantManagement/pages/TenantDetail/Tenan
 import TenantUsers from "@/features/tenantManagement/pages/TenantDetail/TenantUsers";
 import TenantRoles from "@/features/tenantManagement/pages/TenantDetail/TenantRoles";
 import TenantSettings from "@/features/tenantManagement/pages/TenantDetail/TenantSettings";
-import  Logout from "@/features/auth/pages/Logout";
+import Logout from "@/features/auth/pages/Logout";
+import DemoRequest from "@/features/superadmin/pages/DemoRequest";
 
 const SuperAdminRoutes = () => {
   return (
@@ -30,6 +31,7 @@ const SuperAdminRoutes = () => {
           {/*  Create Tenant */}
           <Route path="create" element={<CreateTenant />} />
 
+
           {/*  Tenant Detail (CORE PART) */}
           <Route path=":tenantId" element={<TenantDetailLayout />}>
             <Route index element={<TenantOverview />} />
@@ -39,6 +41,7 @@ const SuperAdminRoutes = () => {
           </Route>
         </Route>
 
+        <Route path="/demo-requests" element={<DemoRequest />} />
         <Route path="/logout" element={<Logout />} />
       </Route>
     </Routes>

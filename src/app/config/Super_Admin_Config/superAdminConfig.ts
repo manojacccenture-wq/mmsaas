@@ -15,10 +15,28 @@ export const superAdminConfig = {
     },
     {
       id: "tenants",
-      label: "Tenants",
-      path: "/tenants",
+      label: "Tenant Management",
+      children: [
+        {
+          id: "tenantList",
+          label: "Tenant List",
+          path: "/tenants",
+          // permission: PERMISSIONS.VIEW_USERS,
+        },
+        {
+          id: "createTenant",
+          label: "Create Tenant",
+          path: "/tenants/create",
+          // permission: PERMISSIONS.CREATE_USER,
+        },
+      ],
     },
 
+    {
+      id: "demoRequest",
+      label: "Demo Requests",
+      path: "/demo-requests",
+    },
     {
       id: "logout",
       label: "Logout",
@@ -27,24 +45,7 @@ export const superAdminConfig = {
     },
     // Keep belowe code for nested path as I want for reference
 
-    // {
-    //   id: "tenants",
-    //   label: "Tenant Management",
-    //   children: [
-    //     {
-    //       id: "tenantList",
-    //       label: "Tenant List",
-    //       path: "/tenants",
-    //       // permission: PERMISSIONS.VIEW_USERS,
-    //     },
-    //     {
-    //       id: "createTenant",
-    //       label: "Create Tenant",
-    //       path: "/tenants/create",
-    //       // permission: PERMISSIONS.CREATE_USER,
-    //     },
-    //   ],
-    // },
+
 
 
 
@@ -57,6 +58,7 @@ export const superAdminConfig = {
     "/": "Super Admin Overview",
     "/tenants": "Tenant List",
     "/tenants/create": "Create Tenant",
+    "/demo-requests": "Demo Requests",
     "/tenants/:tenantId": "Tenant Overview",
     "/tenants/:tenantId/users": "Tenant Users",
     "/tenants/:tenantId/roles": "Tenant Roles",

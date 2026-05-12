@@ -18,7 +18,7 @@ const App: React.FC = () => {
   const toastMessage = useAppSelector((state) => selectToastMessage(state));
   const toastType = useAppSelector((state) => selectToastType(state));
   const toastDuration = useAppSelector((state) => selectToastDuration(state));
-  const { loading,sessionRestored } = useAppSelector((state) => state.auth);
+  const { loading, sessionRestored } = useAppSelector((state) => state.auth);
 
 
   const handleToastClose = (): void => {
@@ -26,14 +26,19 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    if(!sessionRestored){
+    if (!sessionRestored) {
       dispatch(restoreSessionAsync());
-    } 
-  }, [dispatch,sessionRestored]);
+    }
+  }, [dispatch, sessionRestored]);
 
-  if (loading) {
+  // ✅ FIX: Only unmount the app if it's the very first time loading.
+  // Otherwise, running restoreSessionAsync in MFA destroys the modal!
+  if (loading && !sessionRestored) {
     return <div>Loading...</div>; // 🔥 or spinner
   }
+
+
+
 
 
   return (

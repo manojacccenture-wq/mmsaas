@@ -104,6 +104,8 @@ if (requirePublic && isAuthenticated && !mfaPending && !firstTimeLogin) {
   // 3️⃣ MFA route
 if (requireMfa) {
   // ✅ Allow staying if just authenticated (for modal)
+  console.log('isAuthenticated: ', isAuthenticated)
+  console.log('mfaPending: ', mfaPending)
   if (!mfaPending && !isAuthenticated) {
     return <Navigate to="/" replace />;
   }
