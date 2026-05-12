@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 import Input from "@/shared/components/UI/Input/Input";
 import Button from "@/shared/components/UI/Button/Button";
-import Checkbox from "@/shared/components/UI/CheckBox/CheckBox";
+import Checkbox from "@/shared/components/UI/CheckBox/Checkbox";
 import PasswordStrengthInput from "@/shared/components/UI/PasswordStrengthInput/PasswordStrengthInput";
 
 import { signUpSchema } from "@/features/auth/schemas/auth.schema";

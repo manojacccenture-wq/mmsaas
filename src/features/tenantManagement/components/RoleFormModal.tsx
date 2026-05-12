@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Modal from "@/shared/components/Modal/Modal";
 import Input from "@/shared/components/UI/Input/Input";
 import Button from "@/shared/components/UI/Button/Button";
-import Checkbox from "@/shared/components/UI/CheckBox/CheckBox";
+import Checkbox from "@/shared/components/UI/CheckBox/Checkbox";
 import { createRoleSchema, updateRoleSchema, type CreateRoleFormData, type UpdateRoleFormData } from "../schema/roles.schema";
 import { AVAILABLE_PERMISSIONS, getPermissionsByCategory } from "../config/permissionsConfig";
 import type { RoleUI } from "../api/roles.types";

@@ -21,7 +21,7 @@ const Plans: React.FC = () => {
 
   const apiPlans: PlanApiResponse[] = responseData?.data?.data || [];
   const pagination = responseData?.data?.pagination || { total: 0, pages: 1, page: 1 };
-  
+
   const plans: PlanUI[] = apiPlans.map(mapPlanToUI);
 
   const columns: Column<PlanUI>[] = [
@@ -49,9 +49,9 @@ const Plans: React.FC = () => {
       render: (val) => {
         const isActive = val as boolean;
         const colorClass = isActive
-            ? "bg-green-100 text-green-800"
-            : "bg-red-100 text-red-800";
-        
+          ? "bg-green-100 text-green-800"
+          : "bg-red-100 text-red-800";
+
         return (
           <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${colorClass}`}>
             {isActive ? "Active" : "Inactive"}
@@ -65,7 +65,7 @@ const Plans: React.FC = () => {
     return (
       <div className="flex gap-2">
         <Button
-          variant="outline"
+          variant="outlinePrimary"
           size="sm"
           onClick={(e) => { e.stopPropagation(); navigate(`/superadmin/plans/${row.id}`); }}
         >

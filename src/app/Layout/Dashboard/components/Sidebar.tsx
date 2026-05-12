@@ -25,8 +25,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
       ? "/superadmin"
       : `/app/${activeContext?.tenantId}`;
 
-  const match = location.pathname.match(/^\/app\/([a-fA-F0-9]{24})(?:\/([a-zA-Z0-9_-]+))?/);
-  const activeProductId = match ? match[2] : null;
+  
 
   // Grab the static menu directly from the config instead of fetching from backend
   const sidebarMenu = roleConfig.menu || [];

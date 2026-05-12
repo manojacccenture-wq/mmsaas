@@ -1,10 +1,8 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useRef, type ReactNode } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/store/hook';
-import { useEffect } from 'react';
 
 import { logoutAsync } from '@/features/auth/authThunk';
-import { setActiveTenant, setActiveProduct } from '@/features/auth/authSlice';
 // import { hasPermission } from '../../../utils/permissionUtils/permissionUtils';
 
 

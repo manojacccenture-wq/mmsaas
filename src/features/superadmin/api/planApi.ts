@@ -10,7 +10,7 @@ export const planApi = baseApi.injectEndpoints({
     }),
     getPlanById: builder.query({
       query: (id: string) => get(`/v1/api/billing/plans/${id}`)(),
-      providesTags: (result, error, id) => [{ type: "BillingPlan" as any, id }],
+      providesTags: (_result, _error, id) => [{ type: "BillingPlan" as any, id }],
     }),
     createPlan: builder.mutation({
       query: (data: any) => post("/v1/api/billing/plans")(data),

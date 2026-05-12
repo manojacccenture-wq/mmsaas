@@ -5,7 +5,7 @@ import { setActiveTenant, setActiveProduct, setActiveRole } from "@/features/aut
 import { useNavigate, useLocation } from "react-router-dom";
 
 export const useContextSwitcherLogic = () => {
-  const { tenants, user, activeContext, activeProductId } = useAppSelector((state) => state.auth);
+  const { tenants, user,  activeProductId } = useAppSelector((state) => state.auth);
   
   const dispatch = useAppDispatch();
   const navigate = useNavigate();

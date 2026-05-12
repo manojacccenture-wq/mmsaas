@@ -1,6 +1,7 @@
 import React from "react";
+import { z } from "zod";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Button from "@/shared/components/UI/Button/Button";
 import Input from "@/shared/components/UI/Input/Input";
@@ -19,7 +20,7 @@ const CreatePlan: React.FC = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreatePlanFormData>({
+  } = useForm<z.input<typeof createPlanSchema>, any, CreatePlanFormData>({
     resolver: zodResolver(createPlanSchema),
     defaultValues: {
       billingCycle: "monthly",
@@ -29,7 +30,7 @@ const CreatePlan: React.FC = () => {
     },
   });
 
-  const onSubmit = async (data: CreatePlanFormData) => {
+  const onSubmit: SubmitHandler<CreatePlanFormData> = async (data) => {
     try {
       await createPlan(data).unwrap();
       navigate("/superadmin/plans");

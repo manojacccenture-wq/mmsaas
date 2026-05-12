@@ -29,11 +29,10 @@ const ProductSwitcher = () => {
     }
   };
 
-  const options = products.map((p: any) => ({
+  const options: { value: string; label: string }[] = products.map((p: any) => ({
     value: p.code,
     label: `📦 ${p.name}`
   }));
-
   // Add default tenant dashboard option
   options.unshift({
     value: "dashboard",
@@ -41,8 +40,8 @@ const ProductSwitcher = () => {
   });
 
   // Default to dashboard if no specific product matched
-  const currentValue = options.some(o => o.value === activeProductId) 
-    ? activeProductId 
+  const currentValue = options.some(o => o.value === activeProductId)
+    ? activeProductId
     : "dashboard";
 
   return (

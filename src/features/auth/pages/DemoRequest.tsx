@@ -26,7 +26,7 @@ const demoRequestSchema = z.object({
     ),
   companyName: z.string().min(2, "Company name is required"),
   expectedUsers: z.coerce
-    .number({ invalid_type_error: "Must be a number" })
+    .number()
     .min(1, "Must have at least 1 user"),
   useCase: z.string().min(3, "Please briefly describe your use case"),
   phoneNumber: z.string().optional(),
@@ -47,14 +47,14 @@ const DemoRequest = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<DemoRequestSchemaType>({
+  } = useForm<z.input<typeof demoRequestSchema>, any, DemoRequestSchemaType>({
     resolver: zodResolver(demoRequestSchema),
     mode: "onTouched",
     defaultValues: {
       fullName: "",
       workEmail: "",
       companyName: "",
-      expectedUsers: undefined,
+      expectedUsers: undefined as unknown as number,
       useCase: "",
       phoneNumber: "",
     },
