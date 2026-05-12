@@ -11,6 +11,12 @@ import TenantRoles from "@/features/tenantManagement/pages/TenantDetail/TenantRo
 import TenantSettings from "@/features/tenantManagement/pages/TenantDetail/TenantSettings";
 import Logout from "@/features/auth/pages/Logout";
 import DemoRequest from "@/features/superadmin/pages/DemoRequest";
+import Plans from "@/features/superadmin/pages/Plans";
+import CreatePlan from "@/features/superadmin/pages/CreatePlan";
+import PlanDetailLayout from "@/features/superadmin/pages/PlanDetail/PlanDetailLayout";
+import PlanOverview from "@/features/superadmin/pages/PlanDetail/PlanOverview";
+import PlanSubscriptions from "@/features/superadmin/pages/PlanDetail/PlanSubscriptions";
+import PlanSettings from "@/features/superadmin/pages/PlanDetail/PlanSettings";
 
 const SuperAdminRoutes = () => {
   return (
@@ -42,6 +48,18 @@ const SuperAdminRoutes = () => {
         </Route>
 
         <Route path="/demo-requests" element={<DemoRequest />} />
+
+        <Route path="/plans">
+          <Route index element={<Plans />} />
+          <Route path="create" element={<CreatePlan />} />
+          
+          <Route path=":planId" element={<PlanDetailLayout />}>
+            <Route index element={<PlanOverview />} />
+            <Route path="subscriptions" element={<PlanSubscriptions />} />
+            <Route path="settings" element={<PlanSettings />} />
+          </Route>
+        </Route>
+
         <Route path="/logout" element={<Logout />} />
       </Route>
     </Routes>

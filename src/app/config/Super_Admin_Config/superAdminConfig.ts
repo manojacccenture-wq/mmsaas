@@ -38,6 +38,11 @@ export const superAdminConfig = {
       path: "/demo-requests",
     },
     {
+      id: "plans",
+      label: "Subscription Plans",
+      path: "/plans",
+    },
+    {
       id: "logout",
       label: "Logout",
       path: `/logout`,

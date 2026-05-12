@@ -16,6 +16,7 @@ export const tenantConfig = {
         { id: "policy", label: "Policy Management", path: "/policy" },
       ]
     },
+    { id: "billing", label: "Billing", path: "/billing", requiredAction: null },
 
     { id: "logout", label: "Logout", path: "/logout" }
   ],

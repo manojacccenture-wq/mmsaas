@@ -6,6 +6,7 @@ import Logout from "@/features/auth/pages/Logout";
 import Users from "@/features/tenantManagement/pages/Users";
 import Roles from "@/features/tenantManagement/pages/Roles";
 import PolicyManagement from "@/features/policyManagement/pages/PolicyManagement";
+import BillingOverview from "@/features/billing/pages/BillingOverview";
 
 const TenantRoutes = () => {
   return (
@@ -30,6 +31,8 @@ const TenantRoutes = () => {
         <Route path="roles" element={<Roles />} />
 
         <Route path="policy" element={<PolicyManagement />} />
+
+        <Route path="billing" element={<BillingOverview />} />
 
         <Route path="logout" element={<Logout />} />
       </Route>
