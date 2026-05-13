@@ -10,11 +10,17 @@ export const billingApi = baseApi.injectEndpoints({
     getAvailablePlans: builder.query({
       query: () => get("/v1/api/billing/plans")({ limit: 50, includeInactive: false }),
       providesTags: ["BillingPlan" as any],
-    })
+    }),
+    // Super Admin: fetch any tenant's subscription by tenantId
+    getAdminTenantSubscription: builder.query({
+      query: (tenantId: string) => get(`/v1/api/billing/subscriptions/tenant/${tenantId}`)(),
+      providesTags: (result, error, tenantId) => [{ type: "TenantSubscription" as any, id: tenantId }],
+    }),
   }),
 });
 
 export const {
   useGetTenantSubscriptionQuery,
   useGetAvailablePlansQuery,
+  useGetAdminTenantSubscriptionQuery,
 } = billingApi;
