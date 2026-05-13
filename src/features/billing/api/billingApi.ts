@@ -14,7 +14,7 @@ export const billingApi = baseApi.injectEndpoints({
     // Super Admin: fetch any tenant's subscription by tenantId
     getAdminTenantSubscription: builder.query({
       query: (tenantId: string) => get(`/v1/api/billing/subscriptions/tenant/${tenantId}`)(),
-      providesTags: (result, error, tenantId) => [{ type: "TenantSubscription" as any, id: tenantId }],
+      providesTags: ( tenantId) => [{ type: "TenantSubscription" as any, id: tenantId }],
     }),
   }),
 });
