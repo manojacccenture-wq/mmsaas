@@ -17,6 +17,7 @@ import PlanDetailLayout from "@/features/superadmin/pages/PlanDetail/PlanDetailL
 import PlanOverview from "@/features/superadmin/pages/PlanDetail/PlanOverview";
 import PlanSubscriptions from "@/features/superadmin/pages/PlanDetail/PlanSubscriptions";
 import PlanSettings from "@/features/superadmin/pages/PlanDetail/PlanSettings";
+import Dashboard from "@/features/Dashboard/pages/Dashboard";
 
 const SuperAdminRoutes = () => {
   return (
@@ -28,7 +29,7 @@ const SuperAdminRoutes = () => {
           </RouteGuard>
         }
       >
-        <Route index element={<div>Super Admin Dashboard</div>} />
+        <Route index element={<Dashboard />} />
 
         <Route path="tenants">
           {/*  Tenant List */}
