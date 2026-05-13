@@ -7,6 +7,8 @@ import Users from "@/features/tenantManagement/pages/Users";
 import Roles from "@/features/tenantManagement/pages/Roles";
 import PolicyManagement from "@/features/policyManagement/pages/PolicyManagement";
 import BillingOverview from "@/features/billing/pages/BillingOverview";
+import BusinessRolesList from "@/features/businessRoles/pages/BusinessRolesList";
+import EditBusinessRolePage from "@/features/businessRoles/pages/EditBusinessRolePage";
 
 const TenantRoutes = () => {
   return (
@@ -33,6 +35,10 @@ const TenantRoutes = () => {
         <Route path="policy" element={<PolicyManagement />} />
 
         <Route path="billing" element={<BillingOverview />} />
+
+        {/* Business Roles — NEW simplified role system */}
+        <Route path="business-roles" element={<BusinessRolesList />} />
+        <Route path="business-roles/:roleId" element={<EditBusinessRolePage />} />
 
         <Route path="logout" element={<Logout />} />
       </Route>

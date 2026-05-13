@@ -29,7 +29,7 @@ const TenantAdminDashboardView: React.FC = () => {
   const currentUsers = subscription?.usageSnapshot?.currentUsers ?? 0;
   const currentProducts = subscription?.usageSnapshot?.currentProducts ?? 0;
   const maxUsers = currentPlan?.maxUsers ?? 0;
-  const maxProducts = currentPlan?.maxProducts ?? 0;
+  // const maxProducts = currentPlan?.maxProducts ?? 0;
 
   const quickActions = [
     { label: "Manage Users",  onClick: () => navigate(`/app/${tenantId}/users`),   variant: "primary" as const },

@@ -23,7 +23,7 @@ export const useUsers = (tenantId?: string) => {
         tenantId: tenantId!,
         data: {
           email: formData.email,
-          role: formData.role,
+          businessRoleId: formData.role, // Mapping form 'role' to 'businessRoleId'
           password: formData.password,
         },
       }).unwrap();
@@ -44,7 +44,7 @@ export const useUsers = (tenantId?: string) => {
     try {
       const updateData: any = {
         email: formData.email,
-        role: formData.role,
+        businessRoleId: formData.role, // Mapping form 'role' to 'businessRoleId'
       };
 
       if (formData.password) {

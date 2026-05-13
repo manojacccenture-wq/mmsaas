@@ -17,8 +17,9 @@ export interface TenantUI {
 
 export interface TenantUserApi {
   _id: string;
-  email: string;
-  role: string;
+  userId: { _id: string; email: string; isActive: boolean };
+  roleId?: { _id: string; name: string };
+  businessRoleId?: { _id: string; name: string };
 }
 
 export interface TenantUserUI {

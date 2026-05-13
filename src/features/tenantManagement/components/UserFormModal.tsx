@@ -6,7 +6,7 @@ import Input from "@/shared/components/UI/Input/Input";
 import Select from "@/shared/components/UI/Select/Select";
 import Button from "@/shared/components/UI/Button/Button";
 import { createUserSchema, updateUserSchema, type CreateUserFormData, type UpdateUserFormData } from "../schema/users.schema";
-import { useGetGlobalRolesQuery } from "../api/tenantApi";
+import { useLazyGetBusinessRolesQuery } from "@/features/businessRoles/api/businessRoleApi";
 import type { TenantUserUI } from "../api/tenant.types";
 
 interface UserFormModalProps {
@@ -27,8 +27,12 @@ const UserFormModal = ({
   const isEdit = !!user;
   const schema = isEdit ? updateUserSchema : createUserSchema;
 
-  // 🔥 Fetch roles dynamically from the backend
-  const { data: rolesData, isLoading: rolesLoading } = useGetGlobalRolesQuery({});
+  // 🔥 Fetch business roles lazily only on dropdown interaction
+  const [triggerFetch, { data: rolesRes, isLoading: rolesLoading }] = useLazyGetBusinessRolesQuery();
+
+  const handleRoleFocus = () => {
+    triggerFetch();
+  };
 
   const {
     register,
@@ -44,14 +48,14 @@ const UserFormModal = ({
     },
   });
 
-  // Map roles to select options format
+  // Map business roles to select options format
   const roleOptions = useMemo(() => {
-    if (!rolesData?.data) return [];
-    return rolesData.data.map((role: any) => ({
-      value: role._id, // Use _id as the value for the backend
+    if (!rolesRes?.data) return [];
+    return rolesRes.data.map((role: any) => ({
+      value: role._id, 
       label: role.name
     }));
-  }, [rolesData]);
+  }, [rolesRes]);
 
   const handleClose = () => {
     reset();
@@ -90,6 +94,7 @@ const UserFormModal = ({
           placeholder={rolesLoading ? "Loading roles..." : "Select a role"}
           options={roleOptions}
           {...register("role")}
+          onFocus={handleRoleFocus}
           error={!!errors.role}
           helperText={errors.role?.message}
           disabled={rolesLoading}
