@@ -17,6 +17,7 @@ interface AuthState {
   otpType: "email" | "totp" | null;
   loading: Boolean;
   tenants: any[]; // Updated from contexts
+  permissions: string[];
   activeTenantId: string | null;
   activeProductId: string | null;
   activeRole: string | null;
@@ -39,6 +40,7 @@ const initialState: AuthState = {
   activeTenantId: null,
   activeProductId: null,
   activeRole: localStorage.getItem("activeRole") || null,
+  permissions: [],
   activeContext: null,
   sessionRestored: false,
 };
@@ -177,6 +179,7 @@ const authSlice = createSlice({
         state.tenants = [];
         state.activeContext = null;
         state.activeTenantId = null;
+        state.permissions = [];
         state.sessionRestored = false;
         state.status = 'idle';
         state.isAuthenticated = false;
@@ -231,7 +234,6 @@ const authSlice = createSlice({
         state.loading = true;
       })
       .addCase(restoreSessionAsync.fulfilled, (state, action: any) => {
-        console.log('action: ', action)
         state.loading = false;
         state.isAuthenticated = true;
         state.sessionRestored = true;
@@ -246,6 +248,7 @@ const authSlice = createSlice({
         state.activeContext = action.payload.activeContext || null;
         state.activeTenantId = action.payload.activeContext?.tenantId || null;
         state.activeProductId = action.payload.activeContext?.products[0]?.code || null;
+        state.permissions = action.payload.activeContext?.permissions || [];
 
       })
       .addCase(restoreSessionAsync.rejected, (state) => {
