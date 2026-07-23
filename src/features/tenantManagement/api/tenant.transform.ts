@@ -1,6 +1,6 @@
 // tenant.transform.ts
 
-import { type TenantApiResponse,type TenantUI,type TenantUserUI } from "@/features/tenantManagement/api/tenant.types";
+import { type TenantApiResponse, type TenantUI, type TenantUserUI } from "@/features/tenantManagement/api/tenant.types";
 
 export const mapTenantToUI = (t: TenantApiResponse): TenantUI => ({
   id: t._id,
@@ -12,8 +12,13 @@ export const mapTenantToUI = (t: TenantApiResponse): TenantUI => ({
 
 
 
-export const mapTenantUserToUI = (u: any): TenantUserUI => ({
-  id: u.userId?._id || u._id,
-  email: u.userId?.email || u.email,
-  role: u.businessRoleId?.name || u.roleId?.name || "No Role",
-});
+export const mapTenantUserToUI = (u: any): TenantUserUI => {
+
+  console.log('u: any: ', u)
+  return {
+    id: u.userId?._id || u._id,
+    email: u.userId?.email || u.email,
+    role: u.role || u.roleId?.name || "No Role",
+  }
+
+};

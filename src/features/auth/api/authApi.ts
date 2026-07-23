@@ -13,6 +13,9 @@ const API_ENDPOINTS = {
   VERIFY_MFA: "v1/api/auth/verify-login-mfa",
   ENABLE_MFA: "v1/api/auth/enable-mfa",
   VERIFY_MFA_SETUP: "v1/api/auth/verify-mfa-setup",
+  GENERATE_BACKUP_CODES: "v1/api/auth/generate-backup-codes",
+  BACKUP_CODE_COUNT: "v1/api/auth/backup-code-count",
+  RESET_MY_MFA: "v1/api/auth/reset-my-mfa",
   LOGOUT: "v1/api/auth/logout",
   FORGOT_PASSWORD: "v1/api/Account/ForgotPassword",
   RESET_PASSWORD: "v1/api/Account/CustomResetPassword",
@@ -54,8 +57,17 @@ const authService = {
     });
   },
 
+  generateBackupCodes: () => {
+    return apiClient.post(API_ENDPOINTS.GENERATE_BACKUP_CODES);
+  },
 
+  getBackupCodeCount: () => {
+    return apiClient.get(API_ENDPOINTS.BACKUP_CODE_COUNT);
+  },
 
+  resetMyMfa: () => {
+    return apiClient.post(API_ENDPOINTS.RESET_MY_MFA);
+  },
 
   logout: () => {
     return apiClient.post(API_ENDPOINTS.LOGOUT);

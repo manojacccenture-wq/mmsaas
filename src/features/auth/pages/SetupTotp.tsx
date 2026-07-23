@@ -11,6 +11,7 @@ import {
   totpSetupSchema,
   type TotpSetupSchemaType,
 } from "@/features/auth/schemas/auth.schema";
+import BackupCodesModal from "../components/BackupCodesModal";
 
 const SetupTotp: React.FC = () => {
   const navigate = useNavigate();
@@ -46,21 +47,34 @@ const SetupTotp: React.FC = () => {
     fetchQr();
   }, []);
 
+  const [backupCodes, setBackupCodes] = useState<string[]>([]);
+  const [showBackupModal, setShowBackupModal] = useState(false);
+
   // 🔥 STEP 2: verify
   const onSubmit: SubmitHandler<TotpSetupSchemaType> = async (data) => {
     setLoading(true);
     setApiError("");
 
     try {
-      await authService.verifyMfaSetup({ token: data.otp });
+      const res = await authService.verifyMfaSetup({ token: data.otp });
 
       // ✅ SUCCESS
-      navigate("/dashboard");
+      if (res.data?.backupCodes) {
+        setBackupCodes(res.data.backupCodes);
+        setShowBackupModal(true);
+      } else {
+        navigate("/dashboard");
+      }
     } catch (err: any) {
       setApiError(err.response?.data?.msg || "Invalid code");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleModalClose = () => {
+    setShowBackupModal(false);
+    navigate("/dashboard");
   };
 
   return (
@@ -116,6 +130,12 @@ const SetupTotp: React.FC = () => {
           Cancel
         </Button>
       </div>
+
+      <BackupCodesModal
+        isOpen={showBackupModal}
+        onClose={handleModalClose}
+        backupCodes={backupCodes}
+      />
     </div>
   );
 };

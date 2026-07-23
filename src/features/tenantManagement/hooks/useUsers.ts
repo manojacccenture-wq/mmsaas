@@ -1,4 +1,4 @@
-import { useGetTenantUsersQuery, useCreateUserMutation, useUpdateUserMutation, useDeleteUserMutation } from "../api/tenantApi";
+import { useGetTenantUsersQuery, useCreateUserMutation, useUpdateUserMutation, useDeleteUserMutation, useResetUserTotpMutation } from "../api/tenantApi";
 import { mapTenantUserToUI } from "../api/tenant.transform";
 import { useAppDispatch } from "@/app/store/hook";
 import { showToast } from "@/shared/components/Toast/api/toastSlice";
@@ -9,10 +9,12 @@ export const useUsers = (tenantId?: string) => {
   const { data, isLoading, error, refetch } = useGetTenantUsersQuery(tenantId!, {
     skip: !tenantId,
   });
+  console.log('data: ', data)
 
   const [createUser, { isLoading: isCreating }] = useCreateUserMutation();
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
   const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
+  const [resetTotp, { isLoading: isResettingTotp }] = useResetUserTotpMutation();
 
   const users: TenantUserUI[] =
     data?.data?.map(mapTenantUserToUI) || [];
@@ -88,6 +90,19 @@ export const useUsers = (tenantId?: string) => {
     }
   };
 
+  const handleResetTotp = async (userId: string) => {
+    try {
+      await resetTotp({ userId }).unwrap();
+      await refetch();
+      dispatch(showToast({ message: "User 2FA reset successfully", type: "success" }));
+      return { success: true };
+    } catch (err: any) {
+      const errorMessage = err?.data?.message || "Failed to reset 2FA";
+      dispatch(showToast({ message: errorMessage, type: "error" }));
+      return { success: false, error: errorMessage };
+    }
+  };
+
   return {
     users,
     isLoading,
@@ -95,8 +110,10 @@ export const useUsers = (tenantId?: string) => {
     isCreating,
     isUpdating,
     isDeleting,
+    isResettingTotp,
     handleCreate,
     handleUpdate,
     handleDelete,
+    handleResetTotp,
   };
 };

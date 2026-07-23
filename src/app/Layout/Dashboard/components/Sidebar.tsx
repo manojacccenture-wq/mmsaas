@@ -3,6 +3,7 @@ import { SIDEBAR_ICONS } from "@/app/config/Dashboard/sidebarIcons/SidebarIcons"
 
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppSelector } from "@/app/store/hook";
+import { useCapabilities } from "@/shared/hooks/useCapabilities";
 
 import sidebarToggle from "@/assets/Images/Icons/common/sidebar.png";
 import { getRoleConfig } from "@/app/config/getRoleConfig/getRoleConfig";
@@ -17,6 +18,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
   const location = useLocation();
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const { activeContext } = useAppSelector((state) => state.auth);
+  const { hasCapability, hasAnyCapability } = useCapabilities();
 
   const roleConfig = getRoleConfig(activeContext);
 
@@ -39,8 +41,30 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
         : `${basePath}${item.path}`,
   }));
 
-  // No client-side filter needed for now based on your static configs
-  const filteredMenu = menuWithPath || [];
+  // Filter based on capabilities
+  // If item.requiredCapabilities exists, check it. Otherwise, show it.
+  const filteredMenu = menuWithPath.filter((item: any) => {
+    if (item.requiredCapabilities && item.requiredCapabilities.length > 0) {
+      if (!hasAnyCapability(item.requiredCapabilities)) {
+        return false;
+      }
+    }
+    return true;
+  }).map((item: any) => {
+    // Also filter children if they exist
+    if (item.children) {
+      return {
+        ...item,
+        children: item.children.filter((child: any) => {
+          if (child.requiredCapabilities && child.requiredCapabilities.length > 0) {
+            return hasAnyCapability(child.requiredCapabilities);
+          }
+          return true;
+        })
+      };
+    }
+    return item;
+  });
 
   return (
     <aside

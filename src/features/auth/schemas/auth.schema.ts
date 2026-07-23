@@ -36,8 +36,11 @@ export type SignUpSchemaType = z.infer<typeof signUpSchema>;
 export const mfaSchema = z.object({
   otp: z
     .string()
-    .min(1, "OTP is required")
-    .regex(/^\d{6}$/, "OTP must be exactly 6 digits"),
+    .min(1, "Code is required")
+    .refine(
+      (val) => /^\d{6}$/.test(val) || /^[A-Z2-9]{4}-[A-Z2-9]{4}$/.test(val),
+      "Must be a 6-digit OTP or a 9-character backup code"
+    ),
 });
 
 export type MfaSchemaType = z.infer<typeof mfaSchema>;

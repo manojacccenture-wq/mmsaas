@@ -14,7 +14,9 @@ const Users = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<TenantUserUI | null>(null);
 
-  const { users, isLoading, isCreating, isUpdating, isDeleting, handleCreate, handleUpdate, handleDelete } = useUsers(tenantId);
+  const [isResetTotpModalOpen, setIsResetTotpModalOpen] = useState(false);
+
+  const { users, isLoading, isCreating, isUpdating, isDeleting, isResettingTotp, handleCreate, handleUpdate, handleDelete, handleResetTotp } = useUsers(tenantId);
 
   const handleOpenCreateForm = () => {
     setSelectedUser(null);
@@ -31,6 +33,11 @@ const Users = () => {
     setIsDeleteModalOpen(true);
   };
 
+  const handleOpenResetTotpConfirm = (user: TenantUserUI) => {
+    setSelectedUser(user);
+    setIsResetTotpModalOpen(true);
+  };
+
   const handleFormSubmit = async (data: CreateUserFormData | UpdateUserFormData) => {
     if (selectedUser) {
       await handleUpdate(selectedUser.id, data);
@@ -43,6 +50,14 @@ const Users = () => {
     if (selectedUser) {
       await handleDelete(selectedUser.id);
       setIsDeleteModalOpen(false);
+      setSelectedUser(null);
+    }
+  };
+
+  const handleConfirmResetTotp = async () => {
+    if (selectedUser) {
+      await handleResetTotp(selectedUser.id);
+      setIsResetTotpModalOpen(false);
       setSelectedUser(null);
     }
   };
@@ -85,7 +100,7 @@ const Users = () => {
               size="sm"
               variant="outlinePrimary"
               onClick={() => handleOpenEditForm(user)}
-              disabled={isUpdating || isDeleting}
+              disabled={isUpdating || isDeleting || isResettingTotp}
             >
               Edit
             </Button>
@@ -93,9 +108,17 @@ const Users = () => {
               size="sm"
               variant="outlineDanger"
               onClick={() => handleOpenDeleteConfirm(user)}
-              disabled={isDeleting}
+              disabled={isDeleting || isResettingTotp}
             >
               Delete
+            </Button>
+            <Button
+              size="sm"
+              variant="outlineSecondary"
+              onClick={() => handleOpenResetTotpConfirm(user)}
+              disabled={isResettingTotp}
+            >
+              Reset 2FA
             </Button>
           </div>
         )}
@@ -143,6 +166,44 @@ const Users = () => {
               disabled={isDeleting}
             >
               {isDeleting ? "Deleting..." : "Delete"}
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Reset 2FA Confirmation Modal */}
+      <Modal
+        isOpen={isResetTotpModalOpen}
+        onClose={() => {
+          setIsResetTotpModalOpen(false);
+          setSelectedUser(null);
+        }}
+        header={<h2>Reset User 2FA</h2>}
+        width="400px"
+      >
+        <div className="flex flex-col gap-4">
+          <p className="text-muted">
+            Are you sure you want to reset Two-Factor Authentication for this user? They will be prompted to set it up again on their next login.
+          </p>
+          <p className="text-heading font-semibold">{selectedUser?.email}</p>
+
+          <div className="flex justify-end gap-3 mt-6">
+            <Button
+              variant="outlineSecondary"
+              onClick={() => {
+                setIsResetTotpModalOpen(false);
+                setSelectedUser(null);
+              }}
+              disabled={isResettingTotp}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              onClick={handleConfirmResetTotp}
+              disabled={isResettingTotp}
+            >
+              {isResettingTotp ? "Resetting..." : "Reset 2FA"}
             </Button>
           </div>
         </div>

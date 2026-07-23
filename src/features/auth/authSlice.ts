@@ -23,6 +23,8 @@ interface AuthState {
   activeRole: string | null;
   activeContext: any | null;
   sessionRestored: boolean;
+  mfaEnabled: boolean;
+  backupCodeCount: number;
 }
 
 const initialState: AuthState = {
@@ -43,6 +45,8 @@ const initialState: AuthState = {
   permissions: [],
   activeContext: null,
   sessionRestored: false,
+  mfaEnabled: false,
+  backupCodeCount: 0,
 };
 
 const authSlice = createSlice({
@@ -249,6 +253,8 @@ const authSlice = createSlice({
         state.activeTenantId = action.payload.activeContext?.tenantId || null;
         state.activeProductId = action.payload.activeContext?.products[0]?.code || null;
         state.permissions = action.payload.activeContext?.permissions || [];
+        state.mfaEnabled = action.payload.mfaEnabled || false;
+        state.backupCodeCount = action.payload.backupCodeCount || 0;
 
       })
       .addCase(restoreSessionAsync.rejected, (state) => {
@@ -260,6 +266,8 @@ const authSlice = createSlice({
         state.activeContext = null;
         state.activeTenantId = null;
         state.activeRole = null;
+        state.mfaEnabled = false;
+        state.backupCodeCount = 0;
       });
 
 

@@ -9,6 +9,7 @@ import PolicyManagement from "@/features/policyManagement/pages/PolicyManagement
 import BillingOverview from "@/features/billing/pages/BillingOverview";
 import BusinessRolesList from "@/features/businessRoles/pages/BusinessRolesList";
 import EditBusinessRolePage from "@/features/businessRoles/pages/EditBusinessRolePage";
+import CapabilityGuard from "@/shared/components/CapabilityGuard/CapabilityGuard";
 
 const TenantRoutes = () => {
   return (
@@ -24,21 +25,21 @@ const TenantRoutes = () => {
         <Route index element={<Dashboard />} />
 
         {/* matches /app/:tenantId/dashboard */}
-        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="dashboard" element={<CapabilityGuard capability="dashboard.view"><Dashboard /></CapabilityGuard>} />
 
         {/* matches /app/:tenantId/users */}
-        <Route path="users" element={<Users />} />
+        <Route path="users" element={<CapabilityGuard capability="users.view"><Users /></CapabilityGuard>} />
 
         {/* matches /app/:tenantId/roles */}
-        <Route path="roles" element={<Roles />} />
+        <Route path="roles" element={<CapabilityGuard capability="roles.view"><Roles /></CapabilityGuard>} />
 
-        <Route path="policy" element={<PolicyManagement />} />
+        <Route path="policy" element={<CapabilityGuard capability="policy.view"><PolicyManagement /></CapabilityGuard>} />
 
-        <Route path="billing" element={<BillingOverview />} />
+        <Route path="billing" element={<CapabilityGuard capability="billing.view"><BillingOverview /></CapabilityGuard>} />
 
         {/* Business Roles — NEW simplified role system */}
-        <Route path="business-roles" element={<BusinessRolesList />} />
-        <Route path="business-roles/:roleId" element={<EditBusinessRolePage />} />
+        <Route path="business-roles" element={<CapabilityGuard capability="business-roles.view"><BusinessRolesList /></CapabilityGuard>} />
+        <Route path="business-roles/:roleId" element={<CapabilityGuard capabilities={["business-roles.edit", "business-roles.create"]} requireAll={false}><EditBusinessRolePage /></CapabilityGuard>} />
 
         <Route path="logout" element={<Logout />} />
       </Route>

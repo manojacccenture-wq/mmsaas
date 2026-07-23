@@ -38,6 +38,11 @@ export const tenantApi = baseApi.injectEndpoints({
         del(`/v1/api/tenant/${tenantId}/users/${userId}`)(),
       invalidatesTags: ["TenantUser"],
     }),
+    resetUserTotp: builder.mutation({
+      query: ({ userId }: { userId: string }) =>
+        post(`/v1/api/users/${userId}/reset-totp`)(),
+      invalidatesTags: ["TenantUser"],
+    }),
     createRole: builder.mutation({
       query: ({ tenantId, data }: { tenantId: string; data: any }) =>
         post(`/v1/api/tenant/${tenantId}/roles`)(data),
@@ -90,6 +95,7 @@ export const {
   useCreateUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
+  useResetUserTotpMutation,
   useCreateRoleMutation,
   useUpdateRoleMutation,
   useDeleteRoleMutation,

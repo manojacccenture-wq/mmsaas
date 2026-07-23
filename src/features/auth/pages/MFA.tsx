@@ -235,11 +235,16 @@ const MFA: React.FC = () => {
         >
           <Input
             type="text"
-            inputMode="numeric"
-            maxLength={6}
-            formatter={(value: string) =>
-              value.replace(/\D/g, "").slice(0, 6)
-            }
+            inputMode={otpType === "totp" ? "text" : "numeric"}
+            maxLength={otpType === "totp" ? 9 : 6}
+            placeholder={otpType === "totp" ? "6-digit OTP or 9-char Backup Code" : ""}
+            formatter={(value: string) => {
+              if (otpType === "totp") {
+                // allow uppercase letters and numbers and hyphen
+                return value.toUpperCase().replace(/[^A-Z0-9-]/g, "").slice(0, 9);
+              }
+              return value.replace(/\D/g, "").slice(0, 6);
+            }}
             error={!!errors.otp}
             helperText={errors.otp?.message}
             {...register("otp")}
@@ -257,7 +262,8 @@ const MFA: React.FC = () => {
           </Button>
           {otpType === "totp" && (
             <p className="text-center text-xs text-muted">
-              Code refreshes every 30 seconds in your authenticator app
+              Code refreshes every 30 seconds in your authenticator app. <br />
+              Lost your phone? Use a 9-character backup code.
             </p>
           )}
 
