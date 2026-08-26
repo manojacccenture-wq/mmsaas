@@ -23,6 +23,11 @@ export const tenantApi = baseApi.injectEndpoints({
       query: post("/v1/api/tenant/create-with-admin"),
       invalidatesTags: ["Tenant"],
     }),
+    deleteTenant: builder.mutation({
+      query: (tenantId: string) =>
+        del(`/v1/api/tenant/${tenantId}`)(),
+      invalidatesTags: ["Tenant"],
+    }),
     createUser: builder.mutation({
       query: ({ tenantId, data }: { tenantId: string; data: any }) =>
         post(`/v1/api/tenant/${tenantId}/users`)(data),
@@ -92,6 +97,7 @@ export const {
   useGetTenantUsersQuery,
   useGetTenantRolesQuery,
   useCreateTenantMutation,
+  useDeleteTenantMutation,
   useCreateUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,

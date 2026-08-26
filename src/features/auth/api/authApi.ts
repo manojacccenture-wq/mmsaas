@@ -21,6 +21,7 @@ const API_ENDPOINTS = {
   RESET_PASSWORD: "v1/api/Account/CustomResetPassword",
   REFRESH: "v1/api/auth/refresh",
   DEMO_REQUEST: "v1/api/demo-request/demo-request",
+  LAUNCH_TOKEN: "v1/api/auth/launch-token",
 };
 
 
@@ -115,7 +116,17 @@ const authService = {
   },
 
   getSidebarMenu: () => {
+    return apiClient.get(API_ENDPOINTS.ME);
+  },
+
+  getMenu: () => {
     return apiClient.get(API_ENDPOINTS.MENU);
+  },
+
+  generateLaunchToken: (returnUrl?: string) => {
+    return apiClient.get(API_ENDPOINTS.LAUNCH_TOKEN, {
+      params: { returnUrl: returnUrl || "" }
+    });
   },
 
   refreshMe: () => {

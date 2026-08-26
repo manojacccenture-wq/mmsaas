@@ -11,6 +11,7 @@ export const createUserSchema = z.object({
   password: z
     .string()
     .min(8, "Password must be at least 8 characters"),
+  productIds: z.array(z.string()).optional(),
 });
 
 export type CreateUserFormData = z.infer<typeof createUserSchema>;

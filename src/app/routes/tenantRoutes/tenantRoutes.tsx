@@ -10,6 +10,7 @@ import BillingOverview from "@/features/billing/pages/BillingOverview";
 import BusinessRolesList from "@/features/businessRoles/pages/BusinessRolesList";
 import EditBusinessRolePage from "@/features/businessRoles/pages/EditBusinessRolePage";
 import CapabilityGuard from "@/shared/components/CapabilityGuard/CapabilityGuard";
+import ProductRedirector from "@/app/routes/ProductRedirector";
 
 const TenantRoutes = () => {
   return (
@@ -42,6 +43,9 @@ const TenantRoutes = () => {
         <Route path="business-roles/:roleId" element={<CapabilityGuard capabilities={["business-roles.edit", "business-roles.create"]} requireAll={false}><EditBusinessRolePage /></CapabilityGuard>} />
 
         <Route path="logout" element={<Logout />} />
+
+        {/* Catch-all for Product Launching */}
+        <Route path=":productCode" element={<ProductRedirector />} />
       </Route>
     </Routes>
   );

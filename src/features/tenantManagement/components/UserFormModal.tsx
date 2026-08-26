@@ -1,6 +1,8 @@
 import {  useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { RootState } from "@/app/store/store";
 import Modal from "@/shared/components/Modal/Modal";
 import Input from "@/shared/components/UI/Input/Input";
 import Select from "@/shared/components/UI/Select/Select";
@@ -27,6 +29,9 @@ const UserFormModal = ({
   const isEdit = !!user;
   const schema = isEdit ? updateUserSchema : createUserSchema;
 
+  const activeContext = useSelector((state: RootState) => state.auth.activeContext);
+  const availableProducts = activeContext?.products || [];
+
   // 🔥 Fetch business roles lazily only on dropdown interaction
   const [triggerFetch, { data: rolesRes, isLoading: rolesLoading }] = useLazyGetBusinessRolesQuery();
 
@@ -45,6 +50,7 @@ const UserFormModal = ({
       email: user?.email || "",
       role: user?.role || "", // This should eventually be the ID
       password: "",
+      productIds: [],
     },
   });
 
@@ -110,6 +116,26 @@ const UserFormModal = ({
           error={!!errors.password}
           helperText={errors.password?.message}
         />
+
+        {/* Assign Applications */}
+        {!isEdit && availableProducts.length > 0 && (
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-gray-700">Assign Applications (Optional)</label>
+            <div className="flex flex-col gap-2 p-3 border border-gray-200 rounded-md bg-gray-50">
+              {availableProducts.map((product: any) => (
+                <label key={product.code} className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    value={product._id || product.code}
+                    {...register("productIds")}
+                    className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                  />
+                  <span className="text-sm text-gray-800">{product.name}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Actions */}
         <div className="flex justify-end gap-3 mt-6">

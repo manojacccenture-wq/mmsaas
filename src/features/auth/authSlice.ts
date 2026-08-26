@@ -16,7 +16,7 @@ interface AuthState {
   error: string | null;
   otpType: "email" | "totp" | null;
   loading: Boolean;
-  tenants: any[]; // Updated from contexts
+  workspaces: any[]; // Decoupled from legacy memberships
   permissions: string[];
   activeTenantId: string | null;
   activeProductId: string | null;
@@ -38,7 +38,7 @@ const initialState: AuthState = {
   firstTimeLogin: false,
   otpType: null,
   loading: true,
-  tenants: [],
+  workspaces: [],
   activeTenantId: null,
   activeProductId: null,
   activeRole: localStorage.getItem("activeRole") || null,
@@ -180,7 +180,7 @@ const authSlice = createSlice({
       .addCase(logoutAsync.fulfilled, (state) => {
         state.user = null;
         state.tempCredentials = null;
-        state.tenants = [];
+        state.workspaces = [];
         state.activeContext = null;
         state.activeTenantId = null;
         state.permissions = [];
@@ -242,13 +242,13 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.sessionRestored = true;
 
-        // Backend returns: { userId, email, activeContext, tenants }
+        // Backend returns: { userId, email, activeContext, workspaces }
         state.user = {
           userId: action.payload.userId,
           email: action.payload.email
         };
 
-        state.tenants = action.payload.memberships || [];
+        state.workspaces = action.payload.workspaces || [];
         state.activeContext = action.payload.activeContext || null;
         state.activeTenantId = action.payload.activeContext?.tenantId || null;
         state.activeProductId = action.payload.activeContext?.products[0]?.code || null;
@@ -262,7 +262,7 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
         state.sessionRestored = true;
         state.user = null;
-        state.tenants = [];
+        state.workspaces = [];
         state.activeContext = null;
         state.activeTenantId = null;
         state.activeRole = null;

@@ -5,7 +5,7 @@ import { setActiveTenant, setActiveProduct, setActiveRole } from "@/features/aut
 import { useNavigate, useLocation } from "react-router-dom";
 
 export const useContextSwitcherLogic = () => {
-  const { tenants, user,  activeProductId } = useAppSelector((state) => state.auth);
+  const { workspaces, user, activeProductId } = useAppSelector((state) => state.auth);
   
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -23,42 +23,37 @@ export const useContextSwitcherLogic = () => {
     };
   }, [location.pathname]);
 
-  // Compute unique products from memberships
+  // Compute unique products from workspaces
   const availableProducts = useMemo(() => {
     const productsMap = new Map();
-    let hasGeneralWorkspaces = false;
 
-    tenants?.forEach((m: any) => {
-      if (m.productCode) {
-        if (!productsMap.has(m.productCode)) {
-          productsMap.set(m.productCode, {
-            code: m.productCode,
-            name: m.productName
+    workspaces?.forEach((w: any) => {
+      w.products?.forEach((p: any) => {
+        if (!productsMap.has(p.code)) {
+          productsMap.set(p.code, {
+            code: p.code,
+            name: p.name
           });
         }
-      } else if (m.tenantId) {
-        hasGeneralWorkspaces = true;
-      }
+      });
     });
 
     const products = Array.from(productsMap.values());
-    if (hasGeneralWorkspaces) {
-      products.push({
-        code: "GENERAL",
-        name: "General Workspace"
-      });
-    }
+    products.push({
+      code: "GENERAL",
+      name: "Workspace Dashboard" // Fallback option for general workspace administration
+    });
     return products;
-  }, [tenants]);
+  }, [workspaces]);
 
   // Compute available workspaces for the selected product
   const availableWorkspaces = useMemo(() => {
     if (!selectedProductCode) return [];
     if (selectedProductCode === "GENERAL") {
-      return tenants?.filter((m: any) => !m.productCode && m.tenantId);
+      return workspaces; // Show all workspaces for general dashboard
     }
-    return tenants?.filter((m: any) => m.productCode === selectedProductCode);
-  }, [tenants, selectedProductCode]);
+    return workspaces?.filter((w: any) => w.products?.some((p: any) => p.code === selectedProductCode));
+  }, [workspaces, selectedProductCode]);
 
   // Reset dropdown step when opened
   useEffect(() => {
@@ -69,53 +64,51 @@ export const useContextSwitcherLogic = () => {
   }, [isOpen]);
 
   const { tenantLabel, productLabel } = useMemo(() => {
-    const currentMembership = tenants?.find((t: any) => t.tenantId === activeTenantId && t.productCode === activeProductId);
-    const fallbackTenant = tenants?.find((t: any) => t.tenantId === activeTenantId);
+    const currentWorkspace = workspaces?.find((w: any) => w.tenantId === activeTenantId);
     
     const tenantLabel = isGlobal 
       ? "Global Platform" 
-      : currentMembership?.tenantName || fallbackTenant?.tenantName || "Select Workspace";
+      : currentWorkspace?.tenantName || "Select Workspace";
 
     let productLabel = null;
-    if (!isGlobal) {
-      if (currentMembership?.productName) {
-        productLabel = currentMembership.productName;
-      } else if (fallbackTenant?.productName) {
-        productLabel = fallbackTenant.productName;
-      } else if (fallbackTenant) {
-        productLabel = "General Workspace";
+    if (!isGlobal && currentWorkspace) {
+      const activeProduct = currentWorkspace.products?.find((p: any) => p.code === activeProductId);
+      if (activeProduct) {
+        productLabel = activeProduct.name;
+      } else {
+        productLabel = "Workspace Dashboard";
       }
     }
 
     return { tenantLabel, productLabel };
-  }, [isGlobal, tenants, activeTenantId, activeProductId]);
+  }, [isGlobal, workspaces, activeTenantId, activeProductId]);
 
   const handleProductSelect = useCallback((productCode: string) => {
     setSelectedProductCode(productCode);
     setDropdownStep('WORKSPACE');
   }, []);
 
-  const handleWorkspaceSelect = useCallback((membership: any) => {
+  const handleWorkspaceSelect = useCallback((workspace: any) => {
     setIsOpen(false);
     
     
     // 🔥 Explicitly sync Redux state immediately
-    if (membership !== "global") {
-      dispatch(setActiveTenant(membership.tenantId));
-      dispatch(setActiveProduct(membership.productCode || null));
-      dispatch(setActiveRole(membership.role));
+    if (workspace !== "global") {
+      dispatch(setActiveTenant(workspace.tenantId));
+      dispatch(setActiveProduct(selectedProductCode !== "GENERAL" ? selectedProductCode : null));
+      dispatch(setActiveRole(workspace.roleId)); // Might need adjustment if role changes structure
     } else {
       dispatch(setActiveTenant(null));
       dispatch(setActiveProduct(null));
       dispatch(setActiveRole(null));
     }
 
-    if (membership === "global") {
+    if (workspace === "global") {
       navigate("/superadmin");
-    } else if (membership.productCode) {
-      navigate(`/app/${membership.tenantId}/${membership.productCode}`);
+    } else if (selectedProductCode && selectedProductCode !== "GENERAL") {
+      navigate(`/app/${workspace.tenantId}/${selectedProductCode}`);
     } else {
-      navigate(`/app/${membership.tenantId}/dashboard`);
+      navigate(`/app/${workspace.tenantId}/dashboard`);
     }
     setTimeout(() => {
       dispatch(restoreSessionAsync());

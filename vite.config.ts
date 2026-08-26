@@ -10,4 +10,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"), //  ADD THIS
     },
   },
+  server: {
+    allowedHosts: true,
+    port: 5174,
+    strictPort: true
+  }
 });

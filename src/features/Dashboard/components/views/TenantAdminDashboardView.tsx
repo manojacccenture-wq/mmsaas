@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAppSelector } from "@/app/store/hook";
 import { useGetTenantSubscriptionQuery } from "@/features/billing/api/billingApi";
 import TenantSubscriptionPanel from "@/features/billing/components/TenantSubscriptionPanel";
 import StatCard from "@/features/Dashboard/components/widgets/StatCard";
 import QuickActionsCard from "@/features/Dashboard/components/widgets/QuickActionsCard";
 import AlertBanner from "@/features/Dashboard/components/widgets/AlertBanner";
+import ProductLauncherGrid from "@/features/products/components/ProductLauncherGrid";
 
 const calculateRemainingDays = (endDate: string): number => {
   const remaining = Math.ceil(
@@ -16,6 +18,10 @@ const calculateRemainingDays = (endDate: string): number => {
 const TenantAdminDashboardView: React.FC = () => {
   const navigate = useNavigate();
   const { tenantId } = useParams<{ tenantId: string }>();
+  const { activeContext } = useAppSelector((state) => state.auth);
+
+  // Use the products from the cleanly separated active context
+  const availableProducts = activeContext?.products || [];
 
   const { data: subscriptionRes, isLoading } = useGetTenantSubscriptionQuery({});
   const subscription = subscriptionRes?.data ?? null;
@@ -122,6 +128,9 @@ const TenantAdminDashboardView: React.FC = () => {
 
       {/* ── Quick Actions ─────────────────────────────────────────────── */}
       <QuickActionsCard actions={quickActions} />
+
+      {/* ── Product Launcher ────────────────────────────────────────────── */}
+      <ProductLauncherGrid products={availableProducts} />
     </div>
   );
 };
