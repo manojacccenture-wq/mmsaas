@@ -18,7 +18,7 @@ export const mapTenantUserToUI = (u: any): TenantUserUI => {
   return {
     id: u.userId?._id || u._id,
     email: u.userId?.email || u.email,
-    role: u.role || u.roleId?.name || "No Role",
+    role: u.businessRole || "No Role",
   }
 
 };

@@ -2,10 +2,11 @@ import { type DemoRequestApiResponse, type DemoRequestUI } from "./demoRequest.t
 
 export const mapDemoRequestToUI = (req: DemoRequestApiResponse): DemoRequestUI => ({
   id: req._id,
-  firstName: req.firstName,
-  lastName: req.lastName,
+  fullName: req.fullName,
   workEmail: req.workEmail,
   companyName: req.companyName,
+  phoneNumber: req.phoneNumber,
+  useCase: req.useCase,
   status: req.status,
   createdAt: req.createdAt,
 });

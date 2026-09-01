@@ -5,14 +5,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 import Input from "@/shared/components/UI/Input/Input";
-import Button from "@/shared/components/UI/Button/Button"; // Assuming this exists based on your SignIn page
+import Select from "@/shared/components/UI/Select/Select";
+import Button from "@/shared/components/UI/Button/Button";
 import authService from "../api/authApi";
 import { useAppDispatch } from "@/app/store/hook";
 import { showToast } from "@/shared/components/Toast/api/toastSlice";
 
 // ----------------------------------------------------------------------
 // 1. Zod Validation Schema
-// You can move this to your auth.schema.ts file later
 // ----------------------------------------------------------------------
 const demoRequestSchema = z.object({
   fullName: z.string().min(2, "Full name is required"),
@@ -25,6 +25,7 @@ const demoRequestSchema = z.object({
       { message: "Please use your official work email" }
     ),
   companyName: z.string().min(2, "Company name is required"),
+  industry: z.string().min(1, "Please select an industry"),
   expectedUsers: z.coerce
     .number()
     .min(1, "Must have at least 1 user"),
@@ -33,6 +34,17 @@ const demoRequestSchema = z.object({
 });
 
 export type DemoRequestSchemaType = z.infer<typeof demoRequestSchema>;
+
+// Industry options
+const INDUSTRY_OPTIONS = [
+  { label: "Select industry", value: "" },
+  { label: "Restaurant / Food Service", value: "restaurant" },
+  { label: "Retail", value: "retail" },
+  { label: "Healthcare", value: "healthcare" },
+  { label: "Education", value: "education" },
+  { label: "Manufacturing", value: "manufacturing" },
+  { label: "Other", value: "other" },
+];
 
 // ----------------------------------------------------------------------
 // 2. Main Component
@@ -54,6 +66,7 @@ const DemoRequest = () => {
       fullName: "",
       workEmail: "",
       companyName: "",
+      industry: "",
       expectedUsers: undefined as unknown as number,
       useCase: "",
       phoneNumber: "",
@@ -63,17 +76,12 @@ const DemoRequest = () => {
   const onSubmit: SubmitHandler<DemoRequestSchemaType> = async (data) => {
     setIsSubmitting(true);
     try {
-      const nameParts = data.fullName.trim().split(" ");
-      const firstName = nameParts[0];
-      const lastName = nameParts.slice(1).join(" ") || " ";
-
       await authService.submitDemoRequest({
-        firstName,
-        lastName,
+        fullName: data.fullName.trim(),
         workEmail: data.workEmail,
         companyName: data.companyName,
         phoneNumber: data.phoneNumber,
-        useCase: `${data.useCase} (Expected Users: ${data.expectedUsers})`,
+        useCase: `${data.useCase} | Industry: ${data.industry} | Expected Users: ${data.expectedUsers}`,
       });
       
       setIsSuccess(true);
@@ -94,9 +102,9 @@ const DemoRequest = () => {
           <div className="size-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
             ✓
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-3 font-['Outfit']">Request Sent!</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-3 font-['Outfit']">Request Received!</h2>
           <p className="text-gray-600 mb-8 font-['Outfit']">
-            Thank you! Our admin team has been notified. You will receive an email with your 14-day trial access link shortly.
+            Thank you for your interest! Our team will review your request and get back to you within 24 hours with your demo access details.
           </p>
           <Button
             type="button"
@@ -122,12 +130,11 @@ const DemoRequest = () => {
             Request a Free Demo
           </h2>
           <p className="text-gray-500 font-['Outfit']">
-            Experience the full power of MSaaS. Fill out the form below to get your 14-day trial provisioned.
+            Experience the full power of MSaaS. Fill out the form below to get started.
           </p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
-          {/* Using a Grid to make the form layout look professional */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
             <Input
               label="Full Name"
@@ -159,6 +166,15 @@ const DemoRequest = () => {
               {...register("companyName")}
             />
 
+            <Select
+              label="Industry"
+              options={INDUSTRY_OPTIONS}
+              error={!!errors.industry}
+              helperText={errors.industry?.message}
+              disabled={isSubmitting}
+              {...register("industry")}
+            />
+
             <Input
               label="Expected User Count"
               type="number"
@@ -179,15 +195,17 @@ const DemoRequest = () => {
               {...register("phoneNumber")}
             />
 
-            <Input
-              label="Primary Use Case"
-              type="text"
-              placeholder="e.g. Operations Management"
-              error={!!errors.useCase}
-              helperText={errors.useCase?.message}
-              disabled={isSubmitting}
-              {...register("useCase")}
-            />
+            <div className="md:col-span-2">
+              <Input
+                label="Primary Use Case"
+                type="text"
+                placeholder="e.g. Operations Management, Order Tracking, Inventory Control"
+                error={!!errors.useCase}
+                helperText={errors.useCase?.message}
+                disabled={isSubmitting}
+                {...register("useCase")}
+              />
+            </div>
           </div>
 
           <div className="flex flex-col sm:flex-row-reverse items-center justify-between gap-4 border-t border-gray-100 pt-6">

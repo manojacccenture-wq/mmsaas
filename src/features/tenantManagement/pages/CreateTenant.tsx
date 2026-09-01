@@ -50,13 +50,16 @@ const CreateTenant = () => {
         className="flex flex-col gap-4"
       >
         {/* Tenant Name */}
-        <Input
-          label="Tenant Name"
-          placeholder="Enter tenant name"
-          {...register("name")}
-          error={!!errors.name}
-          helperText={errors.name?.message}
-        />
+        <div>
+          <Input
+            label="Tenant Name"
+            placeholder="e.g. Demo-RestaurantABC"
+            {...register("name")}
+            error={!!errors.name}
+            helperText={errors.name?.message}
+          />
+          <p className="text-xs text-gray-400 mt-1">Tip: Prefix demo tenants with "Demo-" for easy identification</p>
+        </div>
 
         {/* Data Mode */}
         <Select

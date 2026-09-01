@@ -1,5 +1,5 @@
 import { baseApi } from "@/app/store/api/baseApi";
-import { get, post } from "@/app/store/api/apiHelpers";
+import { get, post, del } from "@/app/store/api/apiHelpers";
 
 export const demoRequestApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -16,6 +16,10 @@ export const demoRequestApi = baseApi.injectEndpoints({
       query: (id: string) => post(`/v1/api/demo-request/${id}/reject`)(),
       invalidatesTags: ["DemoRequest" as any],
     }),
+    deleteDemoRequest: builder.mutation({
+      query: (id: string) => del(`/v1/api/demo-request/${id}`)(),
+      invalidatesTags: ["DemoRequest" as any],
+    }),
   }),
 });
 
@@ -23,4 +27,5 @@ export const {
   useGetDemoRequestsQuery,
   useApproveDemoRequestMutation,
   useRejectDemoRequestMutation,
+  useDeleteDemoRequestMutation,
 } = demoRequestApi;

@@ -4,8 +4,6 @@ import DashboardLayout from "@/app/Layout/Dashboard/DashboardLayout";
 import Dashboard from "@/features/Dashboard/pages/Dashboard";
 import Logout from "@/features/auth/pages/Logout";
 import Users from "@/features/tenantManagement/pages/Users";
-import Roles from "@/features/tenantManagement/pages/Roles";
-import PolicyManagement from "@/features/policyManagement/pages/PolicyManagement";
 import BillingOverview from "@/features/billing/pages/BillingOverview";
 import BusinessRolesList from "@/features/businessRoles/pages/BusinessRolesList";
 import EditBusinessRolePage from "@/features/businessRoles/pages/EditBusinessRolePage";
@@ -30,11 +28,6 @@ const TenantRoutes = () => {
 
         {/* matches /app/:tenantId/users */}
         <Route path="users" element={<CapabilityGuard capability="users.view"><Users /></CapabilityGuard>} />
-
-        {/* matches /app/:tenantId/roles */}
-        <Route path="roles" element={<CapabilityGuard capability="roles.view"><Roles /></CapabilityGuard>} />
-
-        <Route path="policy" element={<CapabilityGuard capability="policy.view"><PolicyManagement /></CapabilityGuard>} />
 
         <Route path="billing" element={<CapabilityGuard capability="billing.view"><BillingOverview /></CapabilityGuard>} />
 
