@@ -27,6 +27,8 @@ export const useUsers = (tenantId?: string) => {
           email: formData.email,
           businessRoleId: formData.role, // Mapping form 'role' to 'businessRoleId'
           password: formData.password,
+          productIds: formData.productIds,
+          appRoles: formData.appRoles,
         },
       }).unwrap();
       await refetch();
@@ -44,9 +46,11 @@ export const useUsers = (tenantId?: string) => {
 
   const handleUpdate = async (userId: string, formData: any) => {
     try {
-      const updateData: any = {
+        const updateData: any = {
         email: formData.email,
         businessRoleId: formData.role, // Mapping form 'role' to 'businessRoleId'
+        productIds: formData.productIds,
+        appRoles: formData.appRoles,
       };
 
       if (formData.password) {
@@ -77,7 +81,7 @@ export const useUsers = (tenantId?: string) => {
         tenantId: tenantId!,
         userId,
       }).unwrap();
-      await refetch();
+      
       dispatch(showToast({ message: "User deleted successfully", type: "success" }));
       return { success: true };
     } catch (err: any) {

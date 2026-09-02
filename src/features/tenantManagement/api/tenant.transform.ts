@@ -16,9 +16,12 @@ export const mapTenantUserToUI = (u: any): TenantUserUI => {
 
   console.log('u: any: ', u)
   return {
-    id: u.userId?._id || u._id,
+    id: u.userId?._id || u.userId || u._id,
     email: u.userId?.email || u.email,
-    role: u.businessRole || "No Role",
-  }
+    role: u.businessRoleId || "",
+    roleName: u.businessRole || "No Role",
+    productIds: u.productIds || [],
+    appRoles: (u as any).appRoles || [],
+  };
 
 };

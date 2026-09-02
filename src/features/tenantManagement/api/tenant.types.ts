@@ -26,4 +26,7 @@ export interface TenantUserUI {
   id: string;
   email: string;
   role: string;
+  roleName?: string;
+  productIds?: string[];
+  appRoles?: string[];
 }

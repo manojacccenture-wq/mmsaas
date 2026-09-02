@@ -31,9 +31,14 @@ const ProductLauncherGrid: React.FC<ProductLauncherGridProps> = ({ products }) =
             key={product.code}
             product={product}
             onLaunch={(code) => {
-              // Note: tenantRoutes matches `/app/:tenantId/:productCode`
-              // So we just push `code` which resolves relatively to `/app/:tenantId/`
-              navigate(code);
+              // Force ProductRedirector to remount by changing the route path first.
+              // If we are already at `/app/:tenantId/:productCode`, a second
+              // navigate(code) produces the same path and React Router reuses the
+              // existing component instance, so its useEffect never re-fires.
+              // Navigating to dashboard first clears the route, then the product
+              // code push mounts a fresh ProductRedirector whose useEffect runs.
+              navigate('/dashboard');
+              setTimeout(() => navigate(code), 0);
             }}
           />
         ))}

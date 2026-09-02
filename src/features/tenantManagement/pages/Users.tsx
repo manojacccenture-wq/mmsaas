@@ -68,7 +68,7 @@ const Users = () => {
       label: "Email",
     },
     {
-      key: "role",
+      key: "roleName",
       label: "Role",
       render: (value) => (
         <span className="px-2 py-1 rounded bg-[var(--color-blue-100)] text-primary text-sm">
@@ -124,14 +124,16 @@ const Users = () => {
         )}
       />
 
-      {/* User Form Modal */}
-      <UserFormModal
-        isOpen={isFormModalOpen}
-        onClose={() => setIsFormModalOpen(false)}
-        onSubmit={handleFormSubmit}
-        isLoading={isCreating || isUpdating}
-        user={selectedUser || undefined}
-      />
+      {/* User Form Modal — conditionally mounted so useForm re-initializes with correct defaultValues each open */}
+      {isFormModalOpen && (
+        <UserFormModal
+          isOpen={isFormModalOpen}
+          onClose={() => setIsFormModalOpen(false)}
+          onSubmit={handleFormSubmit}
+          isLoading={isCreating || isUpdating}
+          user={selectedUser || undefined}
+        />
+      )}
 
       {/* Delete Confirmation Modal */}
       <Modal

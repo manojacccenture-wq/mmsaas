@@ -36,12 +36,31 @@ export const tenantApi = baseApi.injectEndpoints({
     deleteUser: builder.mutation({
       query: ({ tenantId, userId }: { tenantId: string; userId: string }) =>
         del(`/v1/api/tenant/${tenantId}/users/${userId}`)(),
-      invalidatesTags: ["TenantUser"],
+      async onQueryStarted({ tenantId, userId }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          tenantApi.util.updateQueryData("getTenantUsers", tenantId, (draft: any) => {
+            if (draft?.data) {
+              draft.data = draft.data.filter((u: any) => {
+                const currentId = u.userId?._id || u._id;
+                return currentId !== userId;
+              });
+            }
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
     }),
     resetUserTotp: builder.mutation({
       query: ({ userId }: { userId: string }) =>
         post(`/v1/api/users/${userId}/reset-totp`)(),
       invalidatesTags: ["TenantUser"],
+    }),
+    getFoodErpRoles: builder.query<string[], void>({
+      query: get("/v1/api/integrations/fooderp/roles"),
     }),
   }),
 });
@@ -55,4 +74,5 @@ export const {
   useUpdateUserMutation,
   useDeleteUserMutation,
   useResetUserTotpMutation,
+  useGetFoodErpRolesQuery,
 } = tenantApi;
